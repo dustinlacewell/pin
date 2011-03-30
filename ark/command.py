@@ -40,7 +40,7 @@ class ArkInitCommand(ArkCommand):
 
     def execute(self):
         cwd = os.getcwd()
-        root = registry._get_project_root(cwd)
+        root = registry.get_project_root(cwd)
         if root:
             self.raise_exists(root)
         else:
