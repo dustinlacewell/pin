@@ -1,0 +1,4 @@
+
+VERSION = '0.1dev'
+PROJECT_FOLDERNAME = '.ark'
+SETTINGS_FOLDERNAME = '.arkconf'

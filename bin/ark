@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+if "__main__" == __name__:
+   from ark.delegate import ArkDelegator
+   delegate = ArkDelegator()
+   

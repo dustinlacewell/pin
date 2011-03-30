@@ -1,0 +1,33 @@
+#!/usr/bin/python
+
+import os
+from optparse import OptionParser
+
+from ark.command import ArkCommand
+from ark.bookkeeping import *
+
+class ArkInitCommand(ArkCommand):
+
+    def get_parser(self):
+        parser = OptionParser()
+        # set options here
+        return parser
+
+    def raise_exists(self, path):
+        msg = "Cannot initialize ark in an existing project: %s" % path
+        print msg
+
+    def execute(self):
+        cwd = os.getcwd()
+        root = get_project_root(cwd)
+        if root:
+            self.raise_exists(root)
+        else:
+            initialize_project(cwd)
+
+def main():
+    ArkInitCommand().execute()
+
+if "__main__" == __name__:
+   main()
+
