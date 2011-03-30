@@ -16,7 +16,6 @@ def _establish_settings_folder():
     '''
     path = _get_settings_path()
     if not os.path.isdir(path):
-        print "Creating settings folder"
         os.mkdir(path)
         os.mkdir(os.path.join(path, "templates"))
         with open(os.path.join(path, 'settings.json'), 'w'): pass
@@ -45,10 +44,10 @@ def _create_project_directory(path):
     os.mkdir(os.path.join(project_path, VIRTUALENV_FOLDERNAME))
     with open(os.path.join(project_path, 'settings.yaml'), 'w'): pass
 
-def initialize_project(path):
+def initialize_project(path, alias=None):
     if not _get_project_root(path):
-        msg = "ark project initialized in: %s" % project_path
-        print msg
+        _create_project_directory(path)
+        _register(path, alias)
 
 _establish_settings_folder()
 
@@ -92,8 +91,6 @@ def _save_registry():
     '''
     projects_file = _get_registry_file()
     j = json.dumps({'projects': _projects})
-    print j
-    print projects_file
     projects_file.write(json.dumps({
                     'projects': _projects,
                     'aliases': _aliases}))
@@ -115,7 +112,7 @@ def is_registered(path):
     return path in _projects
 
 @_sync
-def register(path, alias=None):
+def _register(path, alias=None):
     '''
     Register a project path with optional alias
     with ark.
@@ -132,11 +129,8 @@ def register(path, alias=None):
                     alias = None
                     
     _projects[path] = {}
-    msg = "ark initialized at: %s" % path
     if alias:
         _aliases[alias] = path
-        msg = msg + " (%s)" % alias
-    print msg
 
 @_sync
 def pathfor(name):
