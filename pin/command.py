@@ -1,8 +1,8 @@
 import os
-from optparse import OptionParser
+from argparse import ArgumentParser
 
-from ark import registry
-from ark.env import create_virtualenv
+from pin import registry
+from pin.env import create_virtualenv
 
 _commands = {}
 
@@ -12,18 +12,23 @@ def register(cls, name):
 def get(name):
     return _commands.get(name, None)
 
-class ArkCommand(object):
+class PinCommand(object):
+
+    listeners = []
+
     def __init__(self, args):
         self.parser = self.get_parser()
-        self.parser.parse_args()
+        for listener in self.listeners:
+            
+        self.options.parse_args()
 
     def get_parser(self):
-        return OptionParser()
+        return ArgumentParser()
 
     def execute(self):
         pass
 
-class ArkInitCommand(ArkCommand):
+class PinInitCommand(PinCommand):
 
     def get_parser(self):
         parser = OptionParser()
@@ -31,12 +36,12 @@ class ArkInitCommand(ArkCommand):
         return parser
 
     def raise_exists(self, path):
-        msg = "Cannot initialize ark in an existing project: %s" % path
+        msg = "Cannot initialize pin in an existing project: %s" % path
         print msg
 
     def write_script(self):
-        with open(os.path.expanduser("~/.arkconf/source.sh"), 'w') as file:
-            file.write("source .ark/env/bin/activate\n")
+        with open(os.path.expanduser("~/.pinconf/source.sh"), 'w') as file:
+            file.write("source .pin/env/bin/activate\n")
 
     def execute(self):
         cwd = os.getcwd()
@@ -44,11 +49,11 @@ class ArkInitCommand(ArkCommand):
         if root:
             self.raise_exists(root)
         else:
-            print "Creating .ark directory structure..."
+            print "Creating .pin directory structure..."
             registry.initialize_project(cwd)
             print "Creating virtualenv..."
-            create_virtualenv(os.path.join(cwd, '.ark', 'env'))
-            print "ark project initialized in: %s" % cwd
+            create_virtualenv(os.path.join(cwd, '.pin', 'env'))
+            print "pin project initialized in: %s" % cwd
         self.write_script()
 
-register(ArkInitCommand, 'init')
+register(PinInitCommand, 'init')

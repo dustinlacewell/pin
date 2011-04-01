@@ -2,5 +2,5 @@
 
 if "__main__" == __name__:
    from sys import argv
-   from ark.env import auto_virtualenv
+   from pin.env import auto_virtualenv
    auto_virtualenv(argv[1])

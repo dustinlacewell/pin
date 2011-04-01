@@ -1,8 +1,8 @@
 import os
 from argparse import ArgumentParser
 
-from ark import VERSION
-from ark import command
+from pin import VERSION
+from pin import command
 
 class CommandDelegator(object):
     def __init__(self):
@@ -29,7 +29,7 @@ class CommandDelegator(object):
         return parser
         
 
-class ArkDelegator(CommandDelegator):
+class PinDelegator(CommandDelegator):
 
     def do_delegation(self, cmd, args):
         comcls = command.get(cmd)

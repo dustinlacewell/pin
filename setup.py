@@ -1,12 +1,12 @@
 from distutils.core import setup
 
-from ark import VERSION
+from pin import VERSION
 
 setup(
-    name='ark',
+    name='pin',
     version=VERSION,
-    packages=['ark',],
-    scripts=['bin/ark.sh', 'bin/__ark', 'bin/__arkauto'],
+    packages=['pin',],
+    scripts=['bin/pin.sh', 'bin/__pin', ],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
     long_description=open('README.rst').read(),
 )

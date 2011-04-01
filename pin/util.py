@@ -1,6 +1,6 @@
 import os
 
-from ark import *
+from pin import *
 
 def walkup(path):
     '''
@@ -23,7 +23,7 @@ def get_settings_path():
 
 def path_has_project(path):
     '''
-    Determine if supplied path contains the ark project
+    Determine if supplied path contains the pin project
     directory.
     '''
     contents = os.listdir(path)
@@ -32,7 +32,7 @@ def path_has_project(path):
 
 def get_project_root(path):
     '''
-    Find the parent directory of the ark project, if 
+    Find the parent directory of the pin project, if 
     there is one.
     '''
     for directory in walkup(path):

@@ -1,11 +1,11 @@
 import os, sys, simplejson as json
 
-from ark import *
-from ark.util import *
+from pin import *
+from pin.util import *
 
 def establish_settings_folder():
     '''
-    Creates the ark user-settings folder if
+    Creates the pin user-settings folder if
     it does not exist.
     '''
     path = get_settings_path()
@@ -74,7 +74,7 @@ def syncregistry(fin):
 def is_registered(path):
     '''
     Returns whether a project path or alias
-    are registered with ark.
+    are registered with pin.
     '''
     path = _aliases.get(path, path)
     return path in _projects
@@ -83,7 +83,7 @@ def is_registered(path):
 def register(path, alias=None):
     '''
     Register a project path with optional alias
-    with ark.
+    with pin.
     '''
     if alias in _aliases:
         msg = "Alias, %s, already exists. Overwrite? [y/n] " % alias

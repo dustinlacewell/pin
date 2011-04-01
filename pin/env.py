@@ -3,8 +3,8 @@ import os
 import virtualenv
 virtualenv.logger = virtualenv.Logger(consumers=[])
 
-from ark.util import *
-from ark import registry
+from pin.util import *
+from pin import registry
 
 @findroot
 def create_virtualenv(path):

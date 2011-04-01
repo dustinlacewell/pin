@@ -1,7 +1,7 @@
 #!/bin/sh
 
-ark () {
-    __ark "$@"
+pin () {
+    __pin "$@"
     __sourceit
 }
 
@@ -21,12 +21,12 @@ popd() {
 }
 
 __autoit() {
-    __arkauto `pwd`
+    __pinauto `pwd`
     __sourceit
 }
 
 __sourceit () {
-    SOURCEFILE=~/.arkconf/source.sh
+    SOURCEFILE=~/.pinconf/source.sh
     if [ -f "$SOURCEFILE" ]
     then
         eval `cat $SOURCEFILE`
