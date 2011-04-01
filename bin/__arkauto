@@ -1,6 +1,0 @@
-#!/usr/bin/env python
-
-if "__main__" == __name__:
-   from sys import argv
-   from pin.env import auto_virtualenv
-   auto_virtualenv(argv[1])
