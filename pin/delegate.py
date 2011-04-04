@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 
 from pin import VERSION
 from pin import command
+from pin import plugin
 
 class CommandDelegator(object):
     def __init__(self):
@@ -34,6 +35,6 @@ class PinDelegator(CommandDelegator):
     def do_delegation(self, cmd, args):
         comcls = command.get(cmd)
         if comcls:
-            comcls(args).execute()
+            comcls(args)._execute()
         else:
             self.do_default()
