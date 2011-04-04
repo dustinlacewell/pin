@@ -1,7 +1,11 @@
 import os
 from argparse import ArgumentParser
 
-from capn.config import add_external_hook
+try:
+    from capn.config import add_external_hook
+    CAPN = True
+except ImportError:
+    CAPN = False
 
 from pin.config import config
 from pin.event import eventhook
@@ -43,5 +47,5 @@ class CapnVenvPinHook(PinHook):
     def activate_capn(self, file):
         if self.active:
             file.write("source capn\n")
-
-register(CapnVenvPinHook)
+if CAPN:
+    register(CapnVenvPinHook)
