@@ -24,12 +24,12 @@ The pin command will now be available to you. Lets try out pin in a new director
     pin project initialized in: /tmp/testing
     $
 
-pin has created a project directory located at /tmp/testing/.pin pin doesn't do much on it's own but plugins can add functionality to existing command or new commands all together. Let's go ahead and install the *pin-venv* plugins to give pin the ability to work with VirtualEnv.
+pin has created a project directory located at /tmp/testing/.pin/ pin doesn't do much on it's own but plugins can add functionality to existing command or new commands all together. Let's go ahead and install the *pin-venv* plugins to give pin the ability to work with VirtualEnv.
 
     $ sudo pip install pin-venv
     ...
     $ rm -fdr .pin/
-    $ $ pin init --venv
+    $ pin init --venv
     Creating .pin directory structure...
     Creating virtualenv...
     pin project initialized in: /tmp/testing
