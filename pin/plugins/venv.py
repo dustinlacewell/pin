@@ -29,7 +29,6 @@ class VirtualEnvPinHook(PinHook):
     @eventhook('init-post-args')
     def parse_args(self, args, **kwargs):
         parser = ArgumentParser()
-        parser.add_argument('--autoenv', action='store_true')
         parser.add_argument('--venv', action='store_true')
         self.options, extargs  = parser.parse_known_args(args)
 
@@ -41,10 +40,5 @@ class VirtualEnvPinHook(PinHook):
             self.fire("pre-create", path)
             create_virtualenv(path)
             self.fire("post-create", path)
-
-    @eventhook('init-post-script')
-    def write_script(self, file):
-        if self.options and self.options.venv and self.options.autoenv:
-            file.write("source .pin/env/bin/activate\n")
 
 register(VirtualEnvPinHook)
