@@ -46,4 +46,7 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
 **pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
 
 
+### Plugins
+
+Plugins to extend pin's core functionality can be found at : the [[Pin Cushion]]
 
