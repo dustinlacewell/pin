@@ -1,4 +1,12 @@
-import os, sys, simplejson as json
+import os, sys
+
+from yaml import load, dump
+try:
+    from yaml import CLoader as Loader
+    from yaml import CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
+
 
 from pin import *
 from pin.util import *
@@ -11,14 +19,13 @@ def establish_settings_folder():
     path = get_settings_path()
     if not os.path.isdir(path):
         os.mkdir(path)
-        os.mkdir(os.path.join(path, "templates"))
-        with open(os.path.join(path, 'settings.json'), 'w'): pass
+        with open(os.path.join(path, SETTINGS_FILENAME), 'w'): pass
+        with open(os.path.join(path, REGISTRY_FILENAME), 'w'): pass
 
 def create_project_directory(path):
     project_path = os.path.join(path, PROJECT_FOLDERNAME)
     os.mkdir(project_path)
-    os.mkdir(os.path.join(project_path, VIRTUALENV_FOLDERNAME))
-    with open(os.path.join(project_path, 'settings.yaml'), 'w'): pass
+    with open(os.path.join(project_path, SETTINGS_FILENAME), 'w'): pass
 
 def initialize_project(path, alias=None):
     if not get_project_root(path):
@@ -42,14 +49,14 @@ def create_registry():
     filename = get_registry_filename()
     if not os.path.isfile(filename):
         with open(filename, 'w') as file:
-            file.write(json.dumps({'projects': {}, 'aliases': {}}))
+            file.write(dump({'projects': {}, 'aliases': {}}))
 
 def load_registry():
     '''
     Load the registry from disk.
     '''
     with open(get_registry_filename(), 'r') as file:
-        _registry = json.loads(file.read())
+        _registry = load(file, Loader=Loader)
         _projects = _registry['projects']
         _aliases = _registry['aliases']
 
@@ -58,8 +65,8 @@ def save_registry():
     Save the registry to disk.
     '''
     with open(get_registry_filename(), 'w') as file:
-        j = json.dumps({'projects': _projects})
-        file.write(json.dumps({
+        j = dump({'projects': _projects})
+        file.write(dump({
                     'projects': _projects,
                     'aliases': _aliases}))
 

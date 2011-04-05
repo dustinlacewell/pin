@@ -11,7 +11,7 @@ setup(
     scripts=['bin/pin.sh', 'bin/__pin', ],
     data_files=[(os.path.expanduser('~/.pinconf'), ['settings.yml'])],
     license='Creative Commons Attribution-Noncommercial-Share Alike license',
-    long_description=open('README.rst').read(),
+    long_description=open('README.markdown').read(),
 )
 
 user = os.path.basename(os.path.expanduser("~"))

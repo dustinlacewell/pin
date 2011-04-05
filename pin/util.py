@@ -40,13 +40,13 @@ def get_project_root(path):
             return directory
 
 def get_settings_filename():
-    return os.path.join(get_settings_path(), 'settings.json')
+    return os.path.join(get_settings_path(), SETTINGS_FILENAME)
 
 def get_registry_filename():
-    return os.path.join(get_settings_path(), 'projects.json')
+    return os.path.join(get_settings_path(), REGISTRY_FILENAME)
     
 def get_sourcing_filename():
-    return os.path.join(get_settings_path(), 'source.sh')
+    return os.path.join(get_settings_path(), SHELL_FILENAME)
 
 def findroot(fin):
     def fout(path):

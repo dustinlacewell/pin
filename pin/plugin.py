@@ -21,7 +21,7 @@ class PinHook(object):
         pass
 
     def _isactive(self):
-        return = self.isactive()
+        return self.isactive()
     active = property(_isactive)
 
     def isactive(self):

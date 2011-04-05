@@ -2,4 +2,6 @@
 VERSION = '0.1dev'
 PROJECT_FOLDERNAME = '.pin'
 SETTINGS_FOLDERNAME = '.pinconf'
-VIRTUALENV_FOLDERNAME = 'env'
+SETTINGS_FILENAME = 'settings.yml'
+REGISTRY_FILENAME = 'registry.yml'
+SHELL_FILENAME = 'source.sh'
