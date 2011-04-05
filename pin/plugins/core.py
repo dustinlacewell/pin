@@ -6,11 +6,6 @@ from pin import command, registry
 class PinInitCommand(command.PinCommand):
     command = 'init'
 
-    def get_parser(self):
-        parser = ArgumentParser()
-        # set options here
-        return parser
-
     def raise_exists(self, path):
         msg = "Cannot initialize pin in an existing project: %s" % path
         print msg
@@ -30,3 +25,21 @@ class PinInitCommand(command.PinCommand):
 
 
 command.register(PinInitCommand)
+
+
+class PinGoCommand(command.PinCommand):
+    command = 'go'
+
+    def setup_parser(self, parser):
+        parser.add_argument('project', nargs="?")
+
+    def execute(self):
+        self.path = registry.pathfor(self.options.project)
+        return self.path
+
+
+    def write_script(self, file):
+        if self.path:
+            file.write("cd %s\n" % self.path)
+        
+command.register(PinGoCommand)

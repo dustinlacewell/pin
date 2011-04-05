@@ -55,6 +55,7 @@ def load_registry():
     '''
     Load the registry from disk.
     '''
+    global _projects, _aliases
     with open(get_registry_filename(), 'r') as file:
         _registry = load(file, Loader=Loader)
         _projects = _registry['projects']
@@ -73,8 +74,9 @@ def save_registry():
 def syncregistry(fin):
     def fout(*args, **kwargs):
         load_registry()
-        fin(*args, **kwargs)
+        ret = fin(*args, **kwargs)
         save_registry()
+        return ret
     return fout
 
 @syncregistry
@@ -119,7 +121,7 @@ def pathfor(name):
     if path and is_registered(path):
         return path
     # Enuemerate all projects in a folder `name`
-    choices = [p for p in _projects if os.path.basename(p) == path]
+    choices = [p for p in _projects if os.path.basename(p) == name or name is None]
     if len(choices) == 1: # return the only choice
         return choices[0]
     # Get user to select choice
@@ -138,8 +140,8 @@ def pathfor(name):
         except ValueError:
             warning = True
         else:
-            if selection > 1 and selection < len(choices):
-                return choices[selection]
+            if selection >= 1 and selection <= len(choices):
+                return choices[selection-1]
 
 create_registry() # initialize file if non-existant
 load_registry() # load data into module

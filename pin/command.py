@@ -43,11 +43,11 @@ class PinCommand(object):
     def _execute(self):
         cwd = os.getcwd()
         self.fire('pre-exec', cwd)
-        writescript = self.execute()
-        self.fire('post-exec', cwd)
-        if writescript:
+        success = self.execute()
+        if success:
+            self.fire('post-exec', cwd)
             self._writescript()
-        self.done()
+            self.done()
 
 
     def setup_parser(self, parser):
