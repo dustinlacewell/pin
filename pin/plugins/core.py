@@ -41,8 +41,7 @@ class PinDestroyCommand(command.PinCommand):
                 pinpath = os.path.join(root, PROJECT_FOLDERNAME)
                 print "WARNING: Will destory all data in the .pin directory!"
                 os.system("ls %s" % pinpath)
-                selection = raw_input("Really destroy? [y/n]: ")
-                selection = selection.lower()[0]
+                selection = option_select(['y', 'n'], "Really destroy?")
                 if selection == 'n':
                     print "Aborted."
                     return

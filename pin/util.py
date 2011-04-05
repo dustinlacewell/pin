@@ -53,3 +53,40 @@ def findroot(fin):
         path = get_project_root(path)
         fin(path)
     return fout
+
+
+def numeric_select(items, prompt="Select from the above", title="Multiple choices possible:"):
+    numeric_warning = False
+    range_warning = False
+    while True:
+        print title
+        for x in range(len(choices)):
+            print " [%d] - %s" % (x + 1, str(choices[x]))
+        if numeric_warning:
+            print " ** Selection must be numeric"
+            numeric_warning = False
+        if range_warning:
+            print " ** Selection must be in range"
+        selection = raw_input(prompt + " [1 - %d]: " % len(choices))
+        try:
+            selection = int(selection)
+        except ValueError:
+            numeric_warning = True
+        else:
+            if selection >=1 and selection <= len(choices):
+                return choices[selection-1]
+            else:
+                range_warning = True
+
+def option_select(choices, prompt="Which choice?"):
+    option_warning = False
+    prompt = prompt + " [" + "/".join(choices) + "]:"
+    while True:
+        if option_warning:
+            print " ** Input must be one of the options."
+            option_warning = False
+        selection = raw_input(prompt)
+        if selection in choices:
+            return selection
+        else:
+            option_warning = True

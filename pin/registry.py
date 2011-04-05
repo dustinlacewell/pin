@@ -138,23 +138,7 @@ def pathfor(name):
     if len(choices) == 1: # return the only choice
         return choices[0]
     # Get user to select choice
-    repeat = True
-    warning = False
-    while repeat:
-        print "Multiple projects possible:"
-        for x in range(len(choices)):
-            print " [%d] - %s" % (x + 1, choices[x])
-        if warning:
-            print " ** Selection must be numeric"
-            warning = False
-        selection = raw_input("Go to [1 - %d]:" % len(choices))
-        try:
-            selection = int(selection)
-        except ValueError:
-            warning = True
-        else:
-            if selection >= 1 and selection <= len(choices):
-                return choices[selection-1]
+    return numeric_select(choices, "Select path", "Select path")
 
 create_registry() # initialize file if non-existant
 load_registry() # load data into module
