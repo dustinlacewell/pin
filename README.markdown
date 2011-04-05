@@ -41,6 +41,8 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
 
 **pin init** : Initializes the .pin directory and registers the path with ~/.pinconf/registry.yml
 
+**pin destroy** : Deletes the project's .pin directory and unregisters the project path. Only works from inside a project tree.
+
 **pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
 
 
