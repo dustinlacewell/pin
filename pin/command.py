@@ -2,6 +2,7 @@ import os
 from argparse import ArgumentParser
 
 from pin import event
+from pin.util import get_project_root
 
 _commands = {}
 
@@ -42,10 +43,11 @@ class PinCommand(object):
 
     def _execute(self):
         cwd = os.getcwd()
-        self.fire('pre-exec', cwd)
-        success = self.execute()
+        root = get_project_root(cwd)
+        self.fire('pre-exec', cwd, root)
+        success = self.execute(cwd, root)
         if success:
-            self.fire('post-exec', cwd)
+            self.fire('post-exec', cwd, root)
             self._writescript()
             self.done()
 

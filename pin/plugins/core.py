@@ -11,9 +11,7 @@ class PinInitCommand(command.PinCommand):
         msg = "Cannot initialize pin in an existing project: %s" % path
         print msg
 
-    def execute(self):
-        cwd = os.getcwd()
-        root = registry.get_project_root(cwd)
+    def execute(self, cwd, root):
         if root:
             self.raise_exists(root)
         else:
@@ -34,9 +32,7 @@ class PinDestroyCommand(command.PinCommand):
         msg = "No pin project found. (aborted)"
         print msg
 
-    def execute(self):
-        cwd = os.getcwd()
-        root = registry.get_project_root(cwd)
+    def execute(self, cwd, root):
         if not root:
             return self.raise_no_project(root)
         else:
