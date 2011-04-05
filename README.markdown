@@ -48,5 +48,4 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
 
 ### Plugins
 
-Plugins to extend pin's core functionality can be found at : the [[Pin Cushion]]
-
+Plugins to extend pin's core functionality can be found at : the [Pin-Cushion](https://github.com/dustinlacewell/pin/wiki/Pin-Cushion)
