@@ -15,7 +15,7 @@ To use **pin** you will need to source it's shell-script which is installed unde
 
     $ source pin.sh
 
-The **pin** command will now be available to you. Lets try out **pin** in a new directory.
+The **pin** command will now be available to you. Lets try out **pin init** in a new directory.
 
     $ mkdir /tmp/testing
     $ cd /tmp/testing
@@ -24,7 +24,7 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
     pin project initialized in: /tmp/testing
     $
 
-**pin** has created a project directory located at */tmp/testing/.pin/* **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
+**pin** has created a project directory located at */tmp/testing/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
     $ sudo pip install pin-venv
     ...
@@ -46,4 +46,6 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
 **pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
 
 
+### Plugins
 
+Plugins to extend pin's core functionality can be found at the [Pin Cushion](https://github.com/dustinlacewell/pin/wiki/Pin-Cushion)
