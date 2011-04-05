@@ -61,7 +61,7 @@ class PinGoCommand(command.PinCommand):
     def setup_parser(self, parser):
         parser.add_argument('project', nargs="?")
 
-    def execute(self):
+    def execute(self, cwd, root):
         self.path = registry.pathfor(self.options.project)
         return self.path
 

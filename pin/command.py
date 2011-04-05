@@ -58,7 +58,7 @@ class PinCommand(object):
     def write_script(self, file):
         pass
 
-    def execute(self):
+    def execute(self, cwd, root):
         pass
 
     def done(self):
