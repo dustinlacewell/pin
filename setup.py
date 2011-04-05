@@ -6,11 +6,14 @@ from pin import VERSION
 
 setup(
     name='pin',
-    version=VERSION,
+    version="0.1",
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', ],
     data_files=[(os.path.expanduser('~/.pinconf'), ['settings.yml'])],
-    license='Creative Commons Attribution-Noncommercial-Share Alike license',
+    author="Dustin Lacewell",
+    author_email="dlacewell@gmail.com",
+    url="https://github.com/dustinlacewell/pin",
+    description="pin is a generic project management tool for the commandline.",
     long_description=open('README.markdown').read(),
 )
 
