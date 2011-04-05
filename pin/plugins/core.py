@@ -1,6 +1,7 @@
-import os
+import os, shutil
 from argparse import ArgumentParser
 
+from pin import *
 from pin import command, registry
 
 class PinInitCommand(command.PinCommand):
@@ -26,6 +27,37 @@ class PinInitCommand(command.PinCommand):
 
 command.register(PinInitCommand)
 
+class PinDestroyCommand(command.PinCommand):
+    command = 'destroy'
+
+    def raise_no_project(self, path):
+        msg = "No pin project found. (aborted)"
+        print msg
+
+    def execute(self):
+        cwd = os.getcwd()
+        root = registry.get_project_root(cwd)
+        if not root:
+            return self.raise_no_project(root)
+        else:
+            repeat = True
+            while repeat:
+                pinpath = os.path.join(root, PROJECT_FOLDERNAME)
+                print "WARNING: Will destory all data in the .pin directory!"
+                os.system("ls %s" % pinpath)
+                selection = raw_input("Really destroy? [y/n]: ")
+                selection = selection.lower()[0]
+                if selection == 'n':
+                    print "Aborted."
+                    return
+                elif selection == 'y':
+                    shutil.rmtree(pinpath)
+                    registry.unregister(root)
+                    return True
+    def done(self):
+        print "Pin project has been destroyed."
+
+command.register(PinDestroyCommand)
 
 class PinGoCommand(command.PinCommand):
     command = 'go'

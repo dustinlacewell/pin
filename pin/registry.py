@@ -110,6 +110,19 @@ def register(path, alias=None):
         _aliases[alias] = path
 
 @syncregistry
+def unregister(path):
+    '''
+    Unregister a project path with pin.
+    '''
+    del _projects[path]
+    removedaliases = []
+    for alias, apath in _aliases:
+        if apath == path:
+            removedaliases.append(alias)
+    for alias in removedaliases:
+        del _aliases[alias]
+
+@syncregistry
 def pathfor(name):
     '''
     Returns the full path of a project by 
