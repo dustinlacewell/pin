@@ -37,7 +37,11 @@ The **pin** command will now be available to you. Lets try out **pin** in a new 
     bin include lib
     $
 
+### Core Commands
 
+**pin init** : Initializes the .pin directory and registers the path with ~/.pinconf/registry.yml
+
+**pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
 
 
 
