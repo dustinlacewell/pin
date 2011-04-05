@@ -55,7 +55,7 @@ def findroot(fin):
     return fout
 
 
-def numeric_select(items, prompt="Select from the above", title="Multiple choices possible:"):
+def numeric_select(choices, prompt="Select from the above", title="Multiple choices possible:"):
     numeric_warning = False
     range_warning = False
     while True:
