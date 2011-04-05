@@ -20,6 +20,13 @@ class PinHook(object):
     def __init__(self):
         pass
 
+    def _isactive(self):
+        return = self.isactive()
+    active = property(_isactive)
+
+    def isactive(self):
+        return True
+
     def fire(self, eventname, *args, **kwargs):
         event.fire(self.name + '-' + eventname, *args, **kwargs)
 
