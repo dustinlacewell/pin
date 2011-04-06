@@ -2,6 +2,7 @@ import os, shutil
 from argparse import ArgumentParser
 
 from pin import *
+from pin.util import *
 from pin import command, registry
 
 class PinInitCommand(command.PinCommand):
