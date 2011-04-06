@@ -6,7 +6,7 @@ from pin import VERSION
 
 setup(
     name='pin',
-    version="0.3",
+    version="0.3.1",
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', ],
     data_files=[(os.path.expanduser('~/.pinconf'), ['settings.yml'])],
