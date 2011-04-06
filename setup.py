@@ -1,6 +1,6 @@
 import os
 
-from distutils.core import setup
+from setuptools import setup
 
 from pin import VERSION
 
@@ -10,7 +10,7 @@ setup(
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', ],
     data_files=[(os.path.expanduser('~/.pinconf'), ['settings.yml'])],
-    requires=['PyYAML', 'argparse'],
+    install_requires=['PyYAML', 'argparse'],
     provides=['pin'],
     author="Dustin Lacewell",
     author_email="dlacewell@gmail.com",
