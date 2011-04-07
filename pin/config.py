@@ -10,6 +10,7 @@ except ImportError:
 from pin.util import get_project_root
 
 CONFIG_NAME = "settings.yml"
+REGISTRY_NAME = "registry.yml"
 GLOBAL_PATH = os.path.normpath(os.path.expanduser("~/.pinconf"))
 DEFAULT_CONFIG = {}
 
@@ -33,7 +34,17 @@ def save_yaml(path, config):
     config_file.write(dump(config, default_flow_style=False))
     config_file.close()
 
+def check_configuration():
+    if not os.path.isdir(GLOBAL_PATH):
+        os.mkdir(GLOBAL_PATH)
+    configfile = os.path.join(GLOBAL_PATH, CONFIG_NAME)
+    registryfile = os.path.join(GLOBAL_PATH, REGISTRY_NAME)
+    os.open(configfile, os.O_CREAT)
+    os.open(registryfile, os.O_CREAT)
+        
+
 def get_configuration():
+    check_configuration()
     config = DEFAULT_CONFIG
     config = merge(load_yaml(os.path.join(GLOBAL_PATH, CONFIG_NAME)), config)
     # get project configuration
