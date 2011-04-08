@@ -6,7 +6,7 @@ from pin import VERSION
 
 setup(
     name='pin',
-    version="0.1.1",
+    version="0.1.2",
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', ],
     install_requires=['PyYAML', 'argparse'],
