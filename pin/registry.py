@@ -56,8 +56,9 @@ def load_registry():
     Load the registry from disk.
     '''
     global _projects, _aliases
+    default = {'projects':{}, 'aliases':{}}
     with open(get_registry_filename(), 'r') as file:
-        _registry = load(file, Loader=Loader)
+        _registry = load(file, Loader=Loader) or default
         _projects = _registry['projects']
         _aliases = _registry['aliases']
 

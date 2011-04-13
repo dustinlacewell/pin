@@ -1,0 +1,9 @@
+__pincomplete() 
+{
+    local cur
+    COMPREPLY=()
+    cur="${COMP_WORDS[@]:1}"
+    COMPREPLY=( $(__pincomp $COMP_CWORD ${cur}) )
+    return 0
+}
+complete -F __pincomplete pin

@@ -1,14 +1,18 @@
 import os
 from argparse import ArgumentParser
 
+from pin import load_plugins
 from pin import VERSION
 from pin import command
 from pin import plugin
 
 class CommandDelegator(object):
+    parser = ArgumentParser(prog='pin', add_help=False)
+    parser.add_argument('-v', '--version', 
+                        action='version', version=VERSION)
+
     def __init__(self):
         self.delegate = False
-        self.parser = self.get_argument_parser()
         self.args, self.exargs = self.parser.parse_known_args()
 
         if self.exargs:
@@ -23,16 +27,10 @@ class CommandDelegator(object):
     def do_delegation(self, cmd, args):
         raise NotImplementedError
 
-    def get_argument_parser(self):
-        parser = ArgumentParser()
-        parser.add_argument('-v', '--version', 
-                            action='version', version=VERSION)
-        return parser
-        
-
 class PinDelegator(CommandDelegator):
 
     def do_delegation(self, cmd, args):
+        load_plugins()
         comcls = command.get(cmd)
         if comcls:
             comcls(args)._execute()

@@ -1,6 +1,22 @@
-import os
+import os, sys
 
 from pin import *
+
+def compgen():
+    load_plugins()
+    from pin import command
+    nargs, args = sys.argv[1], sys.argv[2:]
+    if int(nargs) == 1:
+        arg = args[0] if args else ''
+        return " ".join([c for c in command._commands if c.startswith(arg)])
+    elif int(nargs) == 2:
+        com = args[0]
+        comcls = command.get(com)
+        subcom = args[1] if len(args) == 2 else ''
+        choices = [c[0].split('-')[-1] for c in comcls.subcommands]
+        prefix = comcls.command + '-' + subcom
+        return " ".join([c for c in choices if c.startswith(subcom)]) 
+        return " ".join(choices + [prefix, ])
 
 def walkup(path):
     '''
@@ -90,3 +106,4 @@ def option_select(choices, prompt="Which choice?"):
             return selection
         else:
             option_warning = True
+

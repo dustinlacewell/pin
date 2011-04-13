@@ -1,4 +1,4 @@
-import os
+import os, sys
 from argparse import ArgumentParser
 
 from pin import event
@@ -16,6 +16,7 @@ class PinCommand(object):
     command = None
 
     def __init__(self, args):
+        self.args = args
         self.parser = self._getparser()
         self.options = self._getoptions(args)
 
@@ -23,7 +24,7 @@ class PinCommand(object):
         event.fire(self.command + '-' + name, *args, **kwargs)
 
     def _getparser(self):
-        parser = ArgumentParser()
+        parser = ArgumentParser(prog='pin ' + self.command, add_help=False)
         self.fire('pre-parser', parser)
         self.setup_parser(parser)
         self.fire('post-parser', parser)
@@ -63,4 +64,38 @@ class PinCommand(object):
 
     def done(self):
         pass
+
+
+class PinBaseCommandDelegator(PinCommand):
+    subcommands = [] # handled commands
+
+    def _getparser(self):
+        '''
+        Adds an implicit 'subcommand' argument.
+        '''
+        parser = ArgumentParser(prog='pin ' + self.command, add_help=False)
+        self.fire('pre-parser', parser)
+        parser.add_argument('subcommand', nargs='?', 
+                            choices=[c[0].split('-')[-1] for c in self.subcommands],
+                            default=None)
+
+        self.setup_parser(parser)
+        self.fire('post-parser', parser)
+        return parser
+
+class PinPluginCommandDelegator(PinBaseCommandDelegator):
+    def _execute(self):
+        cwd = os.getcwd()
+        root = get_project_root(cwd)
+        self.fire('pre-exec', cwd, root)
+        if self.options.subcommand:
+            clskey = self.command + '-' + self.options.subcommand
+            comcls = get(clskey)
+            success = comcls(self.args[1:])._execute()
+        else:
+            success = self.execute(cwd, root)
+        if success:
+            self.fire('post-exec', cwd, root)
+            self._writescript()
+            self.done()
 

@@ -1,6 +1,3 @@
-
-from straight.plugin import load
-
 from pin import event
 
 def register(hook):
@@ -38,4 +35,3 @@ class PinHook(object):
                 event.register(eventname, attr)
 
 _hooks = []
-load("pin.plugins")

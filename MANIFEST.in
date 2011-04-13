@@ -1,4 +1,4 @@
 include setup.py
 include requirements.txt
 include README.markdown
-include settings.yml
+include scripts/pin
