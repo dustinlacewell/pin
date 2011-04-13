@@ -1,0 +1,5 @@
+#!/usr/bin/python
+
+from pin.util import compgen
+print compgen()
+   

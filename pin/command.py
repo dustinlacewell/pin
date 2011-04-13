@@ -12,6 +12,9 @@ def register(cls):
 def get(name):
     return _commands.get(name, None)
 
+def all():
+    return _commands
+
 class PinCommand(object):
     command = None
 
@@ -83,6 +86,10 @@ class PinBaseCommandDelegator(PinCommand):
         self.fire('post-parser', parser)
         return parser
 
+    @classmethod
+    def get_subcommands(cls):
+        raise NotImplementedError
+
 class PinPluginCommandDelegator(PinBaseCommandDelegator):
     def _execute(self):
         cwd = os.getcwd()
@@ -98,4 +105,10 @@ class PinPluginCommandDelegator(PinBaseCommandDelegator):
             self.fire('post-exec', cwd, root)
             self._writescript()
             self.done()
+
+    @classmethod
+    def get_subcommands(cls):
+        return dict((c, get(c)) for c in cls.subcommands)
+
+    
 

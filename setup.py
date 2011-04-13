@@ -6,7 +6,7 @@ from pin import VERSION
 
 setup(
     name='pin',
-    version="0.1.6",
+    version="0.1rc1",
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', 'bin/__pincomp'],
     data_files=[('/etc/bash_completion.d', ['scripts/pin'])],
