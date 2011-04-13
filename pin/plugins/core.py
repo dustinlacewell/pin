@@ -117,12 +117,15 @@ class PinHelpCommand(command.PinCommand):
         maxlength = len(max(comkeys, key=len))
         simplekeys = [k for k in comkeys if not hasattr(command.get(k), 'get_subcommands')]
         containerkeys = [k for k in comkeys if hasattr(command.get(k), 'get_subcommands')]
-        subcomkeys = []
-        for com in containerkeys:
-            comcls = command.get(com)
-            for name, subcomcls in comcls.get_subcommands().items():
-                subcomkeys.append(name)
-        submaxlength = len(max(subcomkeys, key=len))
+        if containerkeys:
+            subcomkeys = []
+            for com in containerkeys:
+                comcls = command.get(com)
+                print com, comcls
+                for name, subcomcls in comcls.get_subcommands().items():
+                    print name
+                    subcomkeys.append(name)
+            submaxlength = len(max(subcomkeys, key=len))
         simplekeys.sort(); containerkeys.sort()
         for key in simplekeys:
             self.process_simplecom(key, collen=maxlength)
