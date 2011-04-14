@@ -78,8 +78,10 @@ class PinBaseCommandDelegator(PinCommand):
         '''
         parser = ArgumentParser(prog='pin ' + self.command, add_help=False)
         self.fire('pre-parser', parser)
+        choices = [c.split('-')[-1] for c in self.get_subcommands()]
+        print choices
         parser.add_argument('subcommand', nargs='?', 
-                            choices=[c[0].split('-')[-1] for c in self.subcommands],
+                            choices=choices,
                             default=None)
 
         self.setup_parser(parser)

@@ -104,11 +104,12 @@ class PinHelpCommand(command.PinCommand):
     def process_containercom(self, name, collen, subcollen):
         comcls = command.get(name)
         subcoms = comcls.get_subcommands()
-        print "{0: >{cl}}  -{1:-^{max}}".format(name, '',cl=collen, max=80-collen)
-        if comcls.__doc__:
-            print "{0: >{cl}}  {1}".format('', comcls.__doc__.strip(), cl=collen)
-        for name, subcom in subcoms.items():
-            self.process_subcom(name, subcom, subcollen)
+        if subcoms:
+            print "{0: >{cl}}  -{1:-^{max}}".format(name, '',cl=collen, max=80-collen)
+            if comcls.__doc__:
+                print "{0: >{cl}}  {1}".format('', comcls.__doc__.strip(), cl=collen)
+            for name, subcom in subcoms.items():
+                self.process_subcom(name, subcom, subcollen)
 
     def do_default_help(self):
         CommandDelegator.parser.print_help()
@@ -121,9 +122,7 @@ class PinHelpCommand(command.PinCommand):
             subcomkeys = []
             for com in containerkeys:
                 comcls = command.get(com)
-                print com, comcls
                 for name, subcomcls in comcls.get_subcommands().items():
-                    print name
                     subcomkeys.append(name)
             submaxlength = len(max(subcomkeys, key=len))
         simplekeys.sort(); containerkeys.sort()
