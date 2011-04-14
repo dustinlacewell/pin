@@ -10,7 +10,7 @@ setup(
     packages=['pin', 'pin.plugins'],
     scripts=['bin/pin.sh', 'bin/__pin', 'bin/__pincomp'],
     data_files=[('/etc/bash_completion.d', ['scripts/pin'])],
-    install_requires=['PyYAML', 'argparse'],
+    install_requires=['PyYAML', 'argparse', 'straight.plugin'],
     provides=['pin'],
     author="Dustin Lacewell",
     author_email="dlacewell@gmail.com",
