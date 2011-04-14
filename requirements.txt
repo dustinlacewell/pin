@@ -1,2 +1,3 @@
 PyYAML>=3.09
 argparse>=1.2.1
+straight.plugin>=1.0
