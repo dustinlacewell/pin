@@ -1,13 +1,11 @@
 pin
 ======
 
-**pin** is a set of Python scripts that help you streamline your use of deployment tools.
+**pin** is a plugin-based command-line utility that helps you manage your software development projects. At it's core, it is a registry of where your projects reside on your file-system. Registering your project with **pin** lets you use utilize the various plugins. Since **pin** is generic, what this means exactly is based on what your project is and what plugins you have installed. 
 
 ### Installation 
 
-    $ sudo apt-get install python-yaml
-    $ sudo pip install straight.plugin
-    $ sudo python setup.py install
+    $ sudo pip install pin
 
 ### Usage
 
