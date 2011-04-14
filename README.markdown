@@ -63,3 +63,41 @@ Lets try out **pin init** in a new directory:
 ### Plugins
 
 Plugins to extend pin's core functionality can be found at the [Pin Cushion](https://github.com/dustinlacewell/pin/wiki/Pin-Cushion)
+
+
+### Writing Plugins
+
+Plugins for **pin** are packaged as Namespace packages. Ensure that your plugin package resembles the following structure:
+
+    yourpackage/
+      setup.py
+      requirements.tx
+      README
+      pin/
+        __init__.py
+        plugins/
+          __init__.py
+          yourpackage.py
+
+To make your package namespaced you will need to add the following lines to each of the two **__init__.py** files:
+
+    import pkg_resources
+    pkg_resources.declare_namespace(__name__)
+
+The two plugin-classes that you can register with pip are **commands** and **hooks**. Before covering those specifically, let's review some notable API available for plugins to use:
+
+### Utility API
+
+ * **util.path_has_project(path)** : Determine if the supplied path contains the pin project-directory.
+
+ * **util.get_project_root(path)** : Find the root project directory for the path, if there is one.
+
+ * **util.get_settings_filename()** : Get the absolute path to the pin settings YAML file
+
+ * **util.get_registry_filename()** : Get the absolute path to the pin registry YAML file
+
+
+### Writing Commands
+
+
+
