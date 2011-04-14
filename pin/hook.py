@@ -1,5 +1,7 @@
 from pin import event
 
+_hooks = []
+
 def register(hook):
     if hook not in _hooks:
         newhook = hook()
@@ -34,4 +36,3 @@ class PinHook(object):
             if eventname:
                 event.register(eventname, attr)
 
-_hooks = []

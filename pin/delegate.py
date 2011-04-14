@@ -4,7 +4,6 @@ from argparse import ArgumentParser
 from pin import load_plugins
 from pin import VERSION
 from pin import command
-from pin import plugin
 
 class CommandDelegator(object):
     parser = ArgumentParser(prog='pin', add_help=False)
