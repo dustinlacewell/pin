@@ -9,11 +9,26 @@ pin
 
 ### Usage
 
-To use **pin** you will need to source it's shell-script which is installed under the name **pin.sh**
+To use **pin** you will need to source it's shell-script which is installed under the name **pin.sh**:
 
     $ source pin.sh
 
-The **pin** command will now be available to you. Lets try out **pin init** in a new directory.
+The **pin** command will now be available to you. To see the core pin commands you can use the **help** command:
+
+    $ pin help
+    usage: pin [-v]
+    
+    optional arguments:
+      -v, --version  show program's version number and exit
+    
+    Available commands for /home/dlacewell/dev/mine/pin:
+    destroy  - Destroy and unregister the project from pin.
+         go  - Teleport to a specific project.
+       help  - This help information. 
+       init  - Initialize pin in the current directory.
+    $ 
+
+Lets try out **pin init** in a new directory:
 
     $ mkdir /tmp/testing
     $ cd /tmp/testing
@@ -24,7 +39,7 @@ The **pin** command will now be available to you. Lets try out **pin init** in a
 
 **pin** has created a project directory located at */tmp/testing/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
-    $ sudo pip install pin-venv
+    $ sudo pip install pinvenv
     ...
     $ rm -fdr .pin/
     $ pin init --venv
@@ -43,6 +58,7 @@ The **pin** command will now be available to you. Lets try out **pin init** in a
 
 **pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
 
+**pin help** : Lists all pin commands including any provided by installed plugins.
 
 ### Plugins
 
