@@ -12,20 +12,20 @@ class PinInitCommand(command.PinCommand):
     '''
     command = 'init'
 
-    def raise_exists(self, path):
-        msg = "Cannot initialize pin in an existing project: %s" % path
+    def raise_exists(self):
+        msg = "Cannot initialize pin in an existing project: %s" % self.cwd
         print msg
 
     def execute(self):
         if self.root:
-            self.raise_exists(root)
+            self.raise_exists()
         else:
             print "Creating .pin directory structure..."
-            registry.initialize_project(cwd)
+            registry.initialize_project(self.cwd)
             return True
 
     def done(self):
-        print "pin project initialized in: %s" % os.getcwd()
+        print "pin project initialized in: %s" % self.cwd
 
 
 command.register(PinInitCommand)
@@ -36,17 +36,17 @@ class PinDestroyCommand(command.PinCommand):
     '''
     command = 'destroy'
 
-    def raise_no_project(self, path):
+    def raise_no_project(self):
         msg = "No pin project found. (aborted)"
         print msg
 
     def execute(self):
         if not self.root:
-            return self.raise_no_project(self.root)
+            return self.raise_no_project()
         else:
             repeat = True
             while repeat:
-                pinpath = os.path.join(root, PROJECT_FOLDERNAME)
+                pinpath = os.path.join(self.root, PROJECT_FOLDERNAME)
                 print "WARNING: Will destory all data in the .pin directory!"
                 os.system("ls %s" % pinpath)
                 selection = option_select(['y', 'n'], "Really destroy?")
