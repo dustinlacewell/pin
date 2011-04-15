@@ -16,8 +16,8 @@ class PinInitCommand(command.PinCommand):
         msg = "Cannot initialize pin in an existing project: %s" % path
         print msg
 
-    def execute(self, cwd, root):
-        if root:
+    def execute(self):
+        if self.root:
             self.raise_exists(root)
         else:
             print "Creating .pin directory structure..."
@@ -40,9 +40,9 @@ class PinDestroyCommand(command.PinCommand):
         msg = "No pin project found. (aborted)"
         print msg
 
-    def execute(self, cwd, root):
-        if not root:
-            return self.raise_no_project(root)
+    def execute(self):
+        if not self.root:
+            return self.raise_no_project(self.root)
         else:
             repeat = True
             while repeat:
@@ -55,7 +55,7 @@ class PinDestroyCommand(command.PinCommand):
                     return
                 elif selection == 'y':
                     shutil.rmtree(pinpath)
-                    registry.unregister(root)
+                    registry.unregister(self.root)
                     return True
     def done(self):
         print "Pin project has been destroyed."
@@ -71,7 +71,7 @@ class PinGoCommand(command.PinCommand):
     def setup_parser(self, parser):
         parser.add_argument('project', nargs="?")
 
-    def execute(self, cwd, root):
+    def execute(self):
         self.path = registry.pathfor(self.options.project)
         return self.path
 
@@ -132,7 +132,7 @@ class PinHelpCommand(command.PinCommand):
             self.process_containercom(key, maxlength, submaxlength)
         
 
-    def execute(self, cwd, root):
+    def execute(self):
         if self.options.commandparts:
             clskey = '-'.join(self.options.commandparts)
             comcls = command.get(clskey)

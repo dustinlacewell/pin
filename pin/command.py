@@ -19,6 +19,8 @@ class PinCommand(object):
     command = None
 
     def __init__(self, args):
+        self.cwd = os.getcwd()
+        self.root = get_project_root(self.cwd)
         self.args = args
         self.parser = self._getparser()
         self.options = self._getoptions(args)
@@ -62,7 +64,7 @@ class PinCommand(object):
     def write_script(self, file):
         pass
 
-    def execute(self, cwd, root):
+    def execute(self):
         pass
 
     def done(self):
