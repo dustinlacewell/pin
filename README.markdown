@@ -99,5 +99,10 @@ The two plugin-classes that you can register with pip are **commands** and **hoo
 
 ### Writing Commands
 
+The base command class is **command.Pincommand**. Your command will be a subclass that you register with **command.register(cls)**. There are a number of methods that you can override to define the behavior of your command. At minimum your class needs to define a class-attribute '**command**' which is the name of your command. Let's write a simple command called '*check*' the determines if the current-working-directory is inside of a pin project:
 
+    class CheckCommand(command.PinCommand):
+        command = 'check'
+
+Just to illustrate the proper way to handle arguments
 
