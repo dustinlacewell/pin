@@ -48,12 +48,10 @@ class PinCommand(object):
             self.fire('post-script', file)
 
     def _execute(self):
-        cwd = os.getcwd()
-        root = get_project_root(cwd)
-        self.fire('pre-exec', cwd, root)
-        success = self.execute(cwd, root)
+        self.fire('pre-exec', self.cwd, self.root)
+        success = self.execute()
         if success:
-            self.fire('post-exec', cwd, root)
+            self.fire('post-exec', self.cwd, self.root)
             self._writescript()
             self.done()
 
