@@ -104,5 +104,39 @@ The base command class is **command.Pincommand**. Your command will be a subclas
     class CheckCommand(command.PinCommand):
         command = 'check'
 
-Just to illustrate the proper way to handle arguments
+Just to illustrate the proper way to handle arguments we'll support an optional path argument to check for paths other than the current-working-directory. Arguments are processed via ArgumentParser and each command is automatically provided a parser to use. In addition to the parser each command is provided a few data attributes. Here is the **PinCommand** initializer:
+
+    def __init__(self, args):
+        self.cwd = os.getcwd()
+        self.root = get_project_root(self.cwd)
+        self.args = args
+        self.parser = self._getparser()
+        self.options = self._getoptions(args)
+
+You can see that the command recieves the current-working-directory, the project root directory (if there is one), any arguments provided to the command and the ArgumentParser and the Options object returned by the parser. For the parser and options, PinCommand provides two methods that you can override in order to process your command's arguments. **PinCommand._getparser()** will call **PinCommand.setup_parser()**. Let's setup that path argument now:
+
+    class CheckCommand(command.PinCommand):
+        command = 'check'
+    
+        def setup_parser(self, parser):
+            parser.add_argument('path', nargs='?', default=self.cwd)
+
+That's all we have to do to add the optional path argument. Now, either the user supplied path or the current-working-directory will end up as an attribute; specifically **self.options.path**. We can use this data in the execute method to do our check.
+
+    from pin.util import get_project_root
+
+    class CheckCommand(command.PinCommand):
+        command = 'check'
+    
+        def setup_parser(self, parser):
+            parser.add_argument('path', nargs='?', default=self.cwd)
+
+        def execute(self):
+            root = get_project_root(self.options.path)
+            if root:
+                print "The path is a part of the project at:", root
+            else:
+                print "The path is not part of a pin project."
+
+      
 
