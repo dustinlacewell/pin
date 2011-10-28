@@ -138,5 +138,5 @@ That's all we have to do to add the optional path argument. Now, either the user
             else:
                 print "The path is not part of a pin project."
 
-      
+**get_project_root** takes a path and walks up through the parents checking for a **.pin** directory. If it finds it, it will return that path. This is how we know if we're under a project tree.      
 
