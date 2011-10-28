@@ -106,7 +106,7 @@ Notice that the init command now supports the --venv option
       - Initialize pin in the current directory.
 
 
-And reinitalize with VirtualEnv support
+Reinitalize with VirtualEnv support
 
     $ pin init --venv
     Creating .pin directory structure...
