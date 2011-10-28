@@ -34,16 +34,16 @@ The **pin** command will now be available to you. To see the core pin commands y
 
 Lets try out **pin init** in a new directory:
 
-    $ mkdir /tmp/testing
-    $ cd /tmp/testing
+    $ cd; mkdir tmp
+    $ cd tmp/
     $ pin init
     Creating .pin directory structure...
-    pin project initialized in: /tmp/testing
+    pin project initialized in: /home/dlacewell/tmp/
     $
 
-**pin** has created a project directory located at */tmp/testing/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. You'll now notice that if we execute the help command once more the **init** command has been replaced by the **destroy** command. This effect of command relevancy is pretty handy. Depending on whether or not you're in a project or what kinds of tools (like fabric or paver) your project uses will affect what commands are available to you. 
+**pin** has created a project directory located at */home/dlacewell/tmp/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. You'll now notice that if we execute the help command once more the **init** command has been replaced by the **destroy** command. This effect of command relevancy is pretty handy. Depending on whether or not you're in a project or what kinds of tools (like fabric or paver) your project uses will affect what commands are available to you. 
 
-    dlacewell@scarf:~/tmp$ pin help
+    $ pin help
     usage: pin [-v] subcommand
     
     positional arguments:
@@ -61,7 +61,7 @@ Lets try out **pin init** in a new directory:
 
 You can always pass the *-a* or *--all* option to help to see a list of all commands that **pin** knows about. However, do not expect irrelevant commands to do anything meaningful if you try to use them:
     
-    dlacewell@scarf:~/tmp$ pin help -a
+    $ pin help -a
     usage: pin [-v] subcommand
     
     positional arguments:
