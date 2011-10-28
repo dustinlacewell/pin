@@ -15,7 +15,7 @@ To use **pin** you will need to source it's shell-script which is installed unde
 
 The **pin** command will now be available to you. To see the core pin commands you can use the **help** command:
 
-    dlacewell@scarf:~$ pin help
+    $ pin help
     usage: pin [-v] subcommand
     
     positional arguments:
@@ -81,13 +81,34 @@ You can always pass the *-a* or *--all* option to help to see a list of all comm
 
 **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
+### Remove existing pin dotfoler and install pinvenv
+    $ rm -fdr .pin/
     $ sudo pip install pinvenv
     ...
-    $ rm -fdr .pin/
+
+### Notice that the init command now supports the --venv option
+    $ pin help
+    usage: pin [-v] subcommand
+    
+    positional arguments:
+      subcommand     any subcommand available below
+    
+    optional arguments:
+      -v, --version
+    Available commands for /home/dlacewell/tmp:
+    pin go [project]
+      - Teleport to a specific project.
+    pin help [-a] [command [command ...]]
+      -  This help information. 
+    pin init [--venv] [--autoenv]
+      - Initialize pin in the current directory.
+
+
+####  and reinitalize with VirtualEnv support
     $ pin init --venv
     Creating .pin directory structure...
     Creating virtualenv...
-    pin project initialized in: /tmp/testing
+    pin project initialized in: /home/dlacewell/tmp
     $ ls .pin/env
     bin include lib
     $
