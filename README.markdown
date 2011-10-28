@@ -43,39 +43,39 @@ Lets try out **pin init** in a new directory:
 
 **pin** has created a project directory located at */tmp/testing/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. You'll now notice that if we execute the help command once more the **init** command has been replaced by the **destroy** command. This effect of command relevancy is pretty handy. Depending on whether or not you're in a project or what kinds of tools (like fabric or paver) your project uses will affect what commands are available to you. You can always pass the *-a* or *--all* option to help to see a list of all commands that **pin** knows about. However, do not expect irrelevant commands to do anything meaningful if you try to use them:
 
-dlacewell@scarf:~/tmp$ pin help
-usage: pin [-v] subcommand
-
-positional arguments:
-  subcommand     any subcommand available below
-
-optional arguments:
-  -v, --version
-Available commands for /home/dlacewell/tmp:
-pin destroy
-  - Destroy and unregister the project from pin.
-pin go [project]
-  - Teleport to a specific project.
-pin help [-a] [command [subcommand]]
-  -  This help information. 
-
-dlacewell@scarf:~/tmp$ pin help -a
-usage: pin [-v] subcommand
-
-positional arguments:
-  subcommand     any subcommand available below
-
-optional arguments:
-  -v, --version
-Available commands for /home/dlacewell/tmp:
-pin destroy
-  - Destroy and unregister the project from pin.
-pin go [project]
-  - Teleport to a specific project.
-pin help [-a] [command [subcommand]]
-  -  This help information. 
-pin init [--venv] [--pip] [--autoenv]
-  - Initialize pin in the current directory.
+    dlacewell@scarf:~/tmp$ pin help
+    usage: pin [-v] subcommand
+    
+    positional arguments:
+      subcommand     any subcommand available below
+    
+    optional arguments:
+      -v, --version
+    Available commands for /home/dlacewell/tmp:
+    pin destroy
+      - Destroy and unregister the project from pin.
+    pin go [project]
+      - Teleport to a specific project.
+    pin help [-a] [command [subcommand]]
+      -  This help information. 
+    
+    dlacewell@scarf:~/tmp$ pin help -a
+    usage: pin [-v] subcommand
+    
+    positional arguments:
+      subcommand     any subcommand available below
+    
+    optional arguments:
+      -v, --version
+    Available commands for /home/dlacewell/tmp:
+    pin destroy
+      - Destroy and unregister the project from pin.
+    pin go [project]
+      - Teleport to a specific project.
+    pin help [-a] [command [subcommand]]
+      -  This help information. 
+    pin init [--venv] [--pip] [--autoenv]
+      - Initialize pin in the current directory.
 
 **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
