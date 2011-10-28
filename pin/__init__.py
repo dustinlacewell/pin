@@ -1,10 +1,10 @@
 
 VERSION = '0.1dev'
-PROJECT_FOLDERNAME = '.pin'
-SETTINGS_FOLDERNAME = '.pinconf'
-SETTINGS_FILENAME = 'settings.yml'
-REGISTRY_FILENAME = 'registry.yml'
-SHELL_FILENAME = 'source.sh'
+PROJECT_FOLDER = '.pin'
+SETTINGS_FOLDER = '.pinconf'
+SETTINGS_FILE = 'settings.yml'
+REGISTRY_FILE = 'registry.yml'
+SHELL_FILE = 'source.sh'
 
 from straight.plugin import load as pluginloader
 
