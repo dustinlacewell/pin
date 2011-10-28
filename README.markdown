@@ -32,6 +32,9 @@ The **pin** command will now be available to you. To see the core pin commands y
       - Initialize pin in the current directory.
     $ 
 
+
+### Initialization
+    
 Lets try out **pin init** in a new directory:
 
     $ cd; mkdir tmp
@@ -41,7 +44,7 @@ Lets try out **pin init** in a new directory:
     pin project initialized in: /home/dlacewell/tmp/
     $
 
-**pin** has created a project directory located at */home/dlacewell/tmp/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. You'll now notice that if we execute the help command once more the **init** command has been replaced by the **destroy** command. This effect of command relevancy is pretty handy. Depending on whether or not you're in a project or what kinds of tools (like fabric or paver) your project uses will affect what commands are available to you. 
+**pin** has created a project directory located at */home/dlacewell/tmp/.pin/* **Generally, commands that operate upon your project can be used *anywhere* below the project's root directory**. You'll now notice that if we execute the help command once more the **init** command has been replaced by the **destroy** command. This feature of command relevancy is pretty handy. Depending on whether or not you're in a project or what kinds of tools (like fabric or paver) your project uses will affect what commands are available to you. 
 
     $ pin help
     usage: pin [-v] subcommand
@@ -78,6 +81,18 @@ You can always pass the *-a* or *--all* option to help to see a list of all comm
       -  This help information. 
     pin init [--venv] [--pip] [--autoenv]
       - Initialize pin in the current directory.
+
+### Core Commands
+
+**pin init** : Initializes the .pin directory and registers the path with ~/.pinconf/registry.yml
+
+**pin destroy** : Deletes the project's .pin directory and unregisters the project path. Only works from inside a project tree.
+
+**pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
+
+**pin help** : Lists all pin commands including any provided by installed plugins.
+
+## Plugin Support
 
 **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
@@ -116,22 +131,11 @@ Reinitalize with VirtualEnv support
     bin include lib
     $
 
-### Core Commands
-
-**pin init** : Initializes the .pin directory and registers the path with ~/.pinconf/registry.yml
-
-**pin destroy** : Deletes the project's .pin directory and unregisters the project path. Only works from inside a project tree.
-
-**pin go <project-name>** : Teleports to the project root if a name is provided. If no name is provided a menu will be presented.
-
-**pin help** : Lists all pin commands including any provided by installed plugins.
-
-### Plugins
+### Get Plugins
 
 Plugins to extend pin's core functionality can be found at the [Pin Cushion](https://github.com/dustinlacewell/pin/wiki/Pin-Cushion)
 
-
-### Writing Plugins
+### Write Plugins
 
 Plugins for **pin** are packaged as Namespace packages. Ensure that your plugin package resembles the following structure:
 
