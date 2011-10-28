@@ -7,10 +7,9 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
+from pin import SETTINGS_FILE, REGISTRY_FILE
 from pin.util import get_project_root
 
-CONFIG_NAME = "settings.yml"
-REGISTRY_NAME = "registry.yml"
 GLOBAL_PATH = os.path.normpath(os.path.expanduser("~/.pinconf"))
 DEFAULT_CONFIG = {}
 
@@ -37,8 +36,8 @@ def save_yaml(path, config):
 def check_configuration():
     if not os.path.isdir(GLOBAL_PATH):
         os.mkdir(GLOBAL_PATH)
-    configfile = os.path.join(GLOBAL_PATH, CONFIG_NAME)
-    registryfile = os.path.join(GLOBAL_PATH, REGISTRY_NAME)
+    configfile = os.path.join(GLOBAL_PATH, SETTINGS_FILE)
+    registryfile = os.path.join(GLOBAL_PATH, REGISTRY_FILE)
     os.open(configfile, os.O_CREAT)
     os.open(registryfile, os.O_CREAT)
         
@@ -46,13 +45,13 @@ def check_configuration():
 def get_configuration():
     check_configuration()
     config = DEFAULT_CONFIG
-    config = merge(load_yaml(os.path.join(GLOBAL_PATH, CONFIG_NAME)), config)
+    config = merge(load_yaml(os.path.join(GLOBAL_PATH, SETTINGS_FILE)), config)
     # get project configuration
     root = get_project_root(os.getcwd())
     if root:
-        configfile = os.path.join(root, '.pin', CONFIG_NAME)
+        configfile = os.path.join(root, '.pin', SETTINGS_FILE)
         if os.path.isfile(configfile):
-            config = merge(load_yaml(os.path.join(root, '.pin', CONFIG_NAME)), config)
+            config = merge(load_yaml(os.path.join(root, '.pin', SETTINGS_FILE)), config)
     return config
 
 config = get_configuration()

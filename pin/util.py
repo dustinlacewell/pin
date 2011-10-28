@@ -22,10 +22,11 @@ def compgen():
     elif nargs == off + 1: # subcommand
         com = args[off-1]
         comcls = command.get(com)
-        subcom = args[off] if len(args) == off+1 else ''
-        choices = [k.split('-')[-1] for k in comcls.get_subcommands()]
-        prefix = comcls.command + '-' + subcom
-        return " ".join([c for c in choices if c.startswith(subcom)]) 
+        if hasattr(comcls, 'get_subcommands'):
+            subcom = args[off] if len(args) == off+1 else ''
+            choices = [k.split('-')[-1] for k in comcls.get_subcommands()]
+            prefix = comcls.command + '-' + subcom
+            return " ".join([c for c in choices if c.startswith(subcom)]) 
     return ""
 
 def walkup(path):
@@ -45,7 +46,7 @@ def name_from_path(path):
     return os.path.basename(path)
 
 def get_settings_path():
-    return os.path.expanduser(os.path.join("~", SETTINGS_FOLDERNAME))
+    return os.path.expanduser(os.path.join("~", SETTINGS_FOLDER))
 
 def path_has_project(path):
     '''
@@ -53,7 +54,7 @@ def path_has_project(path):
     directory.
     '''
     contents = os.listdir(path)
-    if PROJECT_FOLDERNAME in contents:
+    if PROJECT_FOLDER in contents:
         return True
 
 def get_project_root(path):
@@ -66,13 +67,13 @@ def get_project_root(path):
             return directory
 
 def get_settings_filename():
-    return os.path.join(get_settings_path(), SETTINGS_FILENAME)
+    return os.path.join(get_settings_path(), SETTINGS_FILE)
 
 def get_registry_filename():
-    return os.path.join(get_settings_path(), REGISTRY_FILENAME)
+    return os.path.join(get_settings_path(), REGISTRY_FILE)
     
 def get_sourcing_filename():
-    return os.path.join(get_settings_path(), SHELL_FILENAME)
+    return os.path.join(get_settings_path(), SHELL_FILE)
 
 def findroot(fin):
     def fout(path):

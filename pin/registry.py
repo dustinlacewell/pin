@@ -19,13 +19,13 @@ def establish_settings_folder():
     path = get_settings_path()
     if not os.path.isdir(path):
         os.mkdir(path)
-        with open(os.path.join(path, SETTINGS_FILENAME), 'w'): pass
-        with open(os.path.join(path, REGISTRY_FILENAME), 'w'): pass
+        with open(os.path.join(path, SETTINGS_FILE), 'w'): pass
+        with open(os.path.join(path, REGISTRY_FILE), 'w'): pass
 
 def create_project_directory(path):
-    project_path = os.path.join(path, PROJECT_FOLDERNAME)
+    project_path = os.path.join(path, PROJECT_FOLDER)
     os.mkdir(project_path)
-    with open(os.path.join(project_path, SETTINGS_FILENAME), 'w'): pass
+    with open(os.path.join(project_path, SETTINGS_FILE), 'w'): pass
 
 def initialize_project(path, alias=None):
     if not get_project_root(path):
@@ -135,11 +135,18 @@ def pathfor(name):
     if path and is_registered(path):
         return path
     # Enuemerate all projects in a folder `name`
-    choices = [p for p in _projects if os.path.basename(p) == name or name is None]
-    if len(choices) == 1: # return the only choice
+    choices = [p for p in _projects \
+               if os.path.basename(p).startswith(str(name)) or name is None]
+    n_choices = len(choices)
+    if n_choices == 1: # return the only choice
         return choices[0]
-    # Get user to select choice
-    return numeric_select(choices, "Select path", "Select path")
+    else:
+        # Get user to select choice
+        if n_choices == 0:
+            print '*', name, "not found..."
+        return numeric_select(choices or  _projects.keys(), 
+                              "Select path", "Select path")
+        
 
 create_registry() # initialize file if non-existant
 load_registry() # load data into module

@@ -7,10 +7,12 @@ from pin.delegate import CommandDelegator
 from pin import command, registry
 
 class PinInitCommand(command.PinCommand):
-    '''
-    Initialize pin in the current directory.
-    '''
+    '''Initialize pin in the current directory.'''
+
     command = 'init'
+
+    def is_relevant(self):
+        return not self.root
 
     def raise_exists(self):
         msg = "Cannot initialize pin in an existing project: %s" % self.cwd
@@ -31,10 +33,12 @@ class PinInitCommand(command.PinCommand):
 command.register(PinInitCommand)
 
 class PinDestroyCommand(command.PinCommand):
-    '''
-    Destroy and unregister the project from pin.
-    '''
+    '''Destroy and unregister the project from pin.'''
+
     command = 'destroy'
+
+    def is_relevant(self):
+        return self.root
 
     def raise_no_project(self):
         msg = "No pin project found. (aborted)"
@@ -46,7 +50,7 @@ class PinDestroyCommand(command.PinCommand):
         else:
             repeat = True
             while repeat:
-                pinpath = os.path.join(self.root, PROJECT_FOLDERNAME)
+                pinpath = os.path.join(self.root, PROJECT_FOLDER)
                 print "WARNING: Will destory all data in the .pin directory!"
                 os.system("ls %s" % pinpath)
                 selection = option_select(['y', 'n'], "Really destroy?")
@@ -69,12 +73,12 @@ class PinGoCommand(command.PinCommand):
     command = 'go'
 
     def setup_parser(self, parser):
+        
         parser.add_argument('project', nargs="?")
 
     def execute(self):
         self.path = registry.pathfor(self.options.project)
         return self.path
-
 
     def write_script(self, file):
         if self.path:
@@ -83,69 +87,117 @@ class PinGoCommand(command.PinCommand):
 command.register(PinGoCommand)
 
 class PinHelpCommand(command.PinCommand):
-    '''
-    This help information.
-    '''
+    '''This help information.'''
+
     command = 'help'
 
     def setup_parser(self, parser):
-        parser.add_argument('commandparts', nargs='*',
+#        parser.usage = "pin help [-a] [command [subcommand]]"
+        parser.add_argument('command', nargs='*',
                             default=None)
+        parser.add_argument('-a', '--all', dest='all', action='store_true')
 
     def process_simplecom(self, name, collen):
         comcls = command.get(name)
-        doc = comcls.__doc__ or ''
-        print "{0: >{cl}}  - {1: ^24}".format(name, doc.strip(), cl=collen)
+        comobj = comcls([])
+        if comobj.is_relevant() or self.options.all:
+            usage = comobj.parser.format_usage().replace("usage: ", "")
+            doc = comcls.__doc__ or ''
+            print "{0: >{cl}}  - {1: ^24}".format(usage,
+                                                  doc.strip(), 
+                                                  cl=collen)
 
     def process_subcom(self, name, subcom, subcollen):
         doc = subcom.__doc__ or ''
-        print "\t {0: >{scl}}  - {1: ^24}".format(name, doc.strip(), scl=subcollen)
+        name = name.split('-')[-1]
+        print "    {0: >{scl}}  - {1: ^24}".format(name, doc.strip(), scl=subcollen)
 
     def process_containercom(self, name, collen, subcollen):
         comcls = command.get(name)
-        subcoms = comcls.get_subcommands()
-        if subcoms:
-            print "{0: >{cl}}  -{1:-^{max}}".format(name, '',cl=collen, max=80-collen)
+        comobj = comcls([])
+        usage = comobj.parser.format_usage().replace("usage: ", "")
+        print usage.strip()
+        if hasattr(comcls, 'get_subcommands'):
             if comcls.__doc__:
-                print "{0: >{cl}}  {1}".format('', comcls.__doc__.strip(), cl=collen)
-            for name, subcom in subcoms.items():
-                self.process_subcom(name, subcom, subcollen)
+                print "{0} {1}".format(' - ', comcls.__doc__.strip(), cl=collen)
+            subcoms = comcls.get_subcommands()
+            if subcoms:
+                for name, subcom in subcoms.items():
+                    self.process_subcom(name, subcom, subcollen)
 
     def do_default_help(self):
+        '''
+        Render pin's general help
+
+        This method will iterate through all available commands that declare
+        themselves as being 'relevant'. Some processing is done to determine
+        formatting widths of the output and help for delegate-commands 
+        that contain subcommands are dynamically computed.
+        '''
+        # print generic pin help
         CommandDelegator.parser.print_help()
-        print "\nAvailable commands for %s:" % os.getcwd()
         comkeys = [k for k in command.all().keys() if '-' not in k]
         maxlength = len(max(comkeys, key=len))
-        simplekeys = [k for k in comkeys if not hasattr(command.get(k), 'get_subcommands')]
-        containerkeys = [k for k in comkeys if hasattr(command.get(k), 'get_subcommands')]
-        if containerkeys:
-            subcomkeys = []
-            for com in containerkeys:
-                comcls = command.get(com)
-                for name, subcomcls in comcls.get_subcommands().items():
-                    subcomkeys.append(name)
+        simplekeys = [] # commands without subcommands
+        containerkeys = [] # subcommand delgates
+        subcomkeys = []
+        submaxlength = maxlength
+        # iterate over all commands
+        for k in comkeys:
+            # get command class
+            comcls = command.get(k)
+            # get dummy instance
+            comobj = comcls([])
+            # check if command is relevant
+            if comobj.is_relevant() or self.options.all:
+                # add to specific list based on `get_subcommands' attribute
+                if hasattr(comcls, 'get_subcommands'):
+                    containerkeys.append(k)
+                    # grab all subcommand keys
+                    subcoms = comcls.get_subcommands()
+                    if subcoms:
+                        subcomkeys += subcoms.keys()
+                else:
+                    simplekeys.append(k)
+        # calculate global max-length of subcommand keys
+        if subcomkeys:
             submaxlength = len(max(subcomkeys, key=len))
+        # sort all keys
         simplekeys.sort(); containerkeys.sort()
-        for key in simplekeys:
-            self.process_simplecom(key, collen=maxlength)
-        for key in containerkeys:
-            self.process_containercom(key, maxlength, submaxlength)
+        if simplekeys or containerkeys:
+            print "Available commands for %s:" % os.getcwd()
+            # render simplekeys, then containerkeys
+            for key in simplekeys:
+                self.process_simplecom(key, maxlength)
+            for key in containerkeys:
+                self.process_containercom(key, maxlength, submaxlength)
         
 
     def execute(self):
-        if self.options.commandparts:
-            clskey = '-'.join(self.options.commandparts)
+        if self.options.command:
+            clskey = '-'.join(self.options.command)
             comcls = command.get(clskey)
             if comcls: # if args point to pin command
-                parser = comcls([])._getparser()
+                comobj = comcls([])
+                parser = comobj.parser
                 parser.print_help()
+                if hasattr(comcls, 'get_subcommands'):
+                    subcoms = comcls.get_subcommands() 
+                    if subcoms:
+                        submaxlength = len(max(subcoms.keys(), key=len))
+                        for name, subcom in subcoms.items():
+                            self.process_subcom(name, subcom, submaxlength)
             else: # ask parent command
-                pcomcls = command.get(self.options.commandparts[0])
-                subcommands = pcomcls.get_subcommands()
-                if subcommands:
-                    for name, com in subcommands.items():
-                        if name == self.options.commandparts[1]:
-                            print com.__doc__ or 'Command has no docstring.'
+                pcomcls = command.get(self.options.command[0])
+                if pcomcls and hasattr(pcomcls, 'get_subcommands'):
+                    subcommands = pcomcls.get_subcommands()
+                    if subcommands:
+                        for name, com in subcommands.items():
+                            if name == self.options.command[1]:
+                                print com.__doc__ or 'Command has no docstring.'
+                else:
+                    self.do_default_help()
+
                     
             
         else:

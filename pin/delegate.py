@@ -13,12 +13,14 @@ class CommandDelegator(object):
     def __init__(self):
         self.delegate = False
         self.args, self.exargs = self.parser.parse_known_args()
+        self.parser.add_argument('subcommand', nargs=1, default=None, 
+                                 help='any subcommand available below')
 
         if self.exargs:
             cmd, args = self.exargs[0], self.exargs[1:]
-            self.do_delegation(cmd, args)
         else:
-            self.do_default()
+            cmd, args = 'help', None
+        self.do_delegation(cmd, args)
 
     def do_default(self):
         self.parser.print_help()
@@ -30,8 +32,22 @@ class PinDelegator(CommandDelegator):
 
     def do_delegation(self, cmd, args):
         load_plugins()
-        comcls = command.get(cmd)
-        if comcls:
-            comcls(args)._execute()
-        else:
-            self.do_default()
+        if '-' in cmd:
+            cmd, newargs = cmd.split('-', 1)
+            args = [newargs, ] + args
+        comcls = command.get(cmd) or command.get('help')
+        try:
+            if comcls:
+                comobj = comcls(args)
+                if comobj.is_relevant():
+                    comobj._execute()
+                else:
+                    helpcls = command.get('help')
+                    helpobj = helpcls((cmd,))
+                    helpobj._execute()
+                    print "\n'%s %s' command not relevant here." % (cmd, args)
+            else:
+                self.do_default()
+        except KeyboardInterrupt:
+            print "\n"
+            pass
