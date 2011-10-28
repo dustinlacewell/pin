@@ -82,11 +82,13 @@ You can always pass the *-a* or *--all* option to help to see a list of all comm
 **pin** doesn't do much on it's own but plugins can add new functionality to existing commands or new commands all together. Let's go ahead and install the *pin-venv* plugins to give **pin** the ability to work with *VirtualEnv*.
 
 Remove existing pin dotfoler and install pinvenv
+
     $ rm -fdr .pin/
     $ sudo pip install pinvenv
     ...
 
 Notice that the init command now supports the --venv option
+
     $ pin help
     usage: pin [-v] subcommand
     
@@ -105,6 +107,7 @@ Notice that the init command now supports the --venv option
 
 
 And reinitalize with VirtualEnv support
+
     $ pin init --venv
     Creating .pin directory structure...
     Creating virtualenv...
