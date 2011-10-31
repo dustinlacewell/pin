@@ -392,7 +392,7 @@ The parser setup simply adds a dummy usage description to inform the user that t
       subcommand
         sdist  - Generate docs and source distribution.
 
-The way that **PinPaverCommand** informs Pin what subcommands are available it implements the **get_commands** method. **get_commands** returns a dictionary who's keys are the available commands. What values your dictionary keys map to isn't currently important as the values are unused. In the case of **PinPaverCommand**, this involves importing your **pavement.py** file and asking paver for a list of the tasks within:
+The way that **PinPaverCommand** informs Pin what subcommands are available it, is by implementing the **get_commands** method. **get_commands** returns a dictionary who's keys are the available commands. What values your dictionary keys map to isn't currently important as the values are unused. In the case of **PinPaverCommand**, this involves importing your **pavement.py** file and asking paver for a list of the tasks within:
 
         def get_subcommands(cls):
             cwd = os.getcwd()
