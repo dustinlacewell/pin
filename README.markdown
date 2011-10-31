@@ -312,7 +312,7 @@ The basic **PinDelegateCommand** is one that comes with a number **namespaced Pi
         
     command.register(PinPipCommand)
 
-**PinPipCommand* only implements two methods. The **is_relevant** merely checks to see if there is a **requirements.txt** file in the project root. The **setup_parser** method simply hardcodes the command's usage string. You'll notice that there is a class attribute **subcommands** which lists two other classes. Let's take a look at **PinPipRequiresCommand**:
+**PinPipCommand** only implements two methods. The **is_relevant** method merely checks to see if there is a **requirements.txt** file in the project root. The **setup_parser** method simply hardcodes the command's usage string. You'll notice that there is a class attribute **subcommands** which lists two other classes. Let's take a look at **PinPipRequiresCommand**:
 
     class PinPipRequiresCommand(command.PinSubCommand):
         '''Print project's requirements.txt file'''
@@ -334,7 +334,7 @@ The basic **PinDelegateCommand** is one that comes with a number **namespaced Pi
 
     command.register(PinPipRequiresCommand)
 
-The **pip-requires** subcommand is also quite simple. The **setup_parser** method hardcodes the usage string. The **execute** method determines in the project's **requirements.txt** file's absolute path and generates a one line shell script to **cat** out the contents of the file. Finally, the **write_script** method writes out the shell script into the file object resulting in the **requirements.txt** file to be displayed on the user's screen.
+The **pip-requires** subcommand is also quite simple. The **setup_parser** method hardcodes the usage string. The **execute** method determines the project's **requirements.txt** file's absolute path and generates a one line shell script to **cat** out the contents of the file. Finally, the **write_script** method writes out the shell script into the file object resulting in the **requirements.txt** file to be displayed on the user's screen.
 
 The important thing to note here is the name of the command, **pip-requires**. This is the namespacing bit we mentioned before. Namespacing the command in this way, by prefixing the name of the parent command, will ensure that **requires** is only available behind its parent, in this case **pip**.
 
