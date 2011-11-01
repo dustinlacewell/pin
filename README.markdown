@@ -409,11 +409,118 @@ The way that **PinPaverCommand** informs Pin what subcommands are available it, 
             except ImportError, e:
                 return dict()
 
-Finally, to execute the specified paver command the paver module's regular api is used:
+To execute the specified paver command, the paver module's regular api is used:
 
         def execute(self):
             if self.root:
                 os.chdir(self.root)
                 main(self.options.subcommand)
                 return True
+
+
+## PinHooks
+
+Finally, we will take a look at Pin's last plugin class, **PinHook**. A good example of which is **PipPinHook** which tracks the creation of a new Pin project, processing any Pip requirements all starting from a new argument that grants the **`pin init'** command. 
+
+The PinHook starts out similarly to the PinCommand family. In particular, you'll notice the **`name'** class-attribute. Since PinHooks are managed seperately than PinCommands they have their own namespace so the name "pip" here is okay:
+
+    from pin.event import eventhook
+    from pin.hook import PinHook, register
+
+    class PipPinHook(PinHook):
+        '''
+        Processes a requirements.txt file with pip
+        '''
+        name = "pip"
+    
+        def __init__(self):
+            self.options = None
+
+
+### Adding arguments
+
+Another new thing you may have noticed was that we imported **eventhook** from **pin.event**. This is a decorator and you need to pass the name of an event to it, like **'init-post-parser'**. The first part is the name of the command you want to hook, in this case **'init'**. The rest is the name of the event you want to hook, here **'post-parser'**. The function that you decorate will be called anytime the specified command triggers the right event. Check the next section for information on the standard events.
+
+Observe how **PipPinHook** adds itself as a new argument to **Init**. After init calls its own **setup_parser** method, this post_parser method will be called with init's parser to be modified. Here a single argument is added **--pip**.:
+
+        @eventhook('init-post-parser')
+        def init_post_parser(self, parser):
+            parser.add_argument('--pip', action='store_true')
+
+Here, post_args is called after init has finished processing the commandline input through the ArgumentParser. Both the original arguments and the resulting options object are passed in. In this case, we simply save the options for later.
+
+        @eventhook('init-post-args')
+        # parse --pip flag
+        def init_post_args(self, args, options):
+            self.options = options
+
+Now we'll wait to see if init successfully executes and if it does we'll save the path to the root of the new pin project for later:
+
+        @eventhook('init-post-exec')
+        # save project root
+        def init_post_exec(self, cwd, root):
+            self.options.root = cwd
+
+Next, instead of hooking another init event, we hook another plugin, pip-venv - Pip's VirtualEnv support. The **post-create** event will pass us the path to the newly created VirtualEnv. If both our **--pip** and **--venv** options are present then we store this path to the options object for the next step:
+
+    @eventhook('venv-post-create')
+    def venv_post_create(self, path):
+        # only install if options were present
+        if self.active and self.options.venv: 
+            self.options.venvpath = path
+
+
+Lastly, we add our own bit of shell-script to invoke the external pip command, telling it to install our requirements.txt file using the new VirtualEnv.
+
+        @eventhook('init-post-script')
+        # install the requirements file
+        def init_post_script(self, file):
+            if self.options.venvpath:
+                venvopt = "-E %s" % self.options.venvpath
+                file.write("pip install %s -r %s;" % (venvopt, 
+                                         os.path.join(self.options.root,
+                                                     'requirements.txt')))
+   
+    register(PipPinHook)
+
+
+## Standard Events
+
+  - pre-parser : Before a command configures its ArgumentParser
+    + parameters:
+       -- parser : The ArgumentParser
+
+  - post-parser : After a command configures its ArgumentParser
+    + parameters:
+       -- parser : The ArgumentParser
+
+  - pre-args : Before a command parses its argument input
+    + parameters:
+       -- args : The user supplied argument input
+
+  - post-args : After a command parses its argument input
+    + parameters:
+       -- args : The user supplied argument input
+       -- options : The resulting parsed arguments object
+
+  - pre-script : Before a command writes out its shell-script
+    + parameters:
+       -- file : The open file object representing the shell-script
+
+  - post-script : After a command writes out its shell-script
+    + parameters:
+       -- file : The open file object representing the shell-script
+
+  - pre-exec : Before a command performs its actual work
+    + parameters:
+       -- cwd : The current directory where the command was performed
+       -- root : The path of the parent root pin project directory, if there is one
+
+  - post-exec : After a command has performed its actual work
+    + parameters:
+       -- cwd : The current directory where the command was performed
+       -- root : The path of the parent root pin project directory, if there is one
+
+
+
 
