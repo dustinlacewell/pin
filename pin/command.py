@@ -182,9 +182,8 @@ class PinDelegateCommand(PinCommand):
                 if subcom.command == '-'.join((self.command, self.options.subcommand[0])):
                     subcom(self.args[1:])._execute()
                     return
-            if not found:
-                self.fire('pre-exec', self.cwd, self.root)
-                success = self.execute()
+            self.fire('pre-exec', self.cwd, self.root)
+            success = self.execute()
         else:
             self.fire('pre-exec', self.cwd, self.root)
             success = self.execute()
