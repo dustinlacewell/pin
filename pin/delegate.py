@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 from pin import load_plugins
 from pin import VERSION
-from pin import command
+from pin import command, registry
 
 class CommandDelegator(object):
     parser = ArgumentParser(prog='pin', add_help=False)
@@ -32,6 +32,12 @@ class PinDelegator(CommandDelegator):
 
     def do_delegation(self, cmd, args):
         load_plugins()
+        # project precondition
+        proj_path = registry.pathfor(cmd, exact=False)
+        if proj_path is not None:
+            os.chdir(proj_path)
+            cmd = args[0]
+            args = args[1:]
         if '-' in cmd:
             cmd, newargs = cmd.split('-', 1)
             args = [newargs, ] + args

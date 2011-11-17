@@ -66,6 +66,13 @@ class PinDestroyCommand(command.PinCommand):
 
 command.register(PinDestroyCommand)
 
+class PinProjectProxy(object):
+    '''Pin project project used for Go command'''
+    
+    def __init__(self, path):
+        self.__doc__ = path
+
+
 class PinGoCommand(command.PinCommand):
     '''
     Teleport to a specific project.
@@ -77,13 +84,19 @@ class PinGoCommand(command.PinCommand):
         parser.add_argument('project', nargs="?")
 
     def execute(self):
-        self.path = registry.pathfor(self.options.project)
+        self.path = registry.pathfor(self.options.project, 
+                                     exact=False, ask=True)
         return self.path
 
     def write_script(self, file):
         if self.path:
             file.write("cd %s\n" % self.path)
         
+    @classmethod
+    def get_subcommands(cls):
+        return dict((os.path.basename(p), PinProjectProxy(p)) 
+                    for p in registry._projects)
+
 command.register(PinGoCommand)
 
 class PinHelpCommand(command.PinCommand):
@@ -92,7 +105,6 @@ class PinHelpCommand(command.PinCommand):
     command = 'help'
 
     def setup_parser(self, parser):
-#        parser.usage = "pin help [-a] [command [subcommand]]"
         parser.add_argument('command', nargs='*',
                             default=None)
         parser.add_argument('-a', '--all', dest='all', action='store_true')

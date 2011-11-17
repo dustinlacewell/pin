@@ -87,7 +87,7 @@ def is_registered(path):
     are registered with pin.
     '''
     path = _aliases.get(path, path)
-    return path in _projects
+    return path in [os.path.basename(p) for p in _projects]
 
 @syncregistry
 def register(path, alias=None):
@@ -124,7 +124,7 @@ def unregister(path):
         del _aliases[alias]
 
 @syncregistry
-def pathfor(name):
+def pathfor(name, exact=True, ask=False):
     '''
     Returns the full path of a project by 
     name or alias. If the name is not found
@@ -135,16 +135,17 @@ def pathfor(name):
     if path and is_registered(path):
         return path
     # Enuemerate all projects in a folder `name`
-    choices = [p for p in _projects \
-               if os.path.basename(p).startswith(str(name)) or name is None]
-    n_choices = len(choices)
-    if n_choices == 1: # return the only choice
-        return choices[0]
-    else:
-        # Get user to select choice
-        if n_choices == 0:
-            print '*', name, "not found..."
-        return numeric_select(choices or  _projects.keys(), 
+    if not exact or ask:
+        choices = [p for p in _projects \
+                   if os.path.basename(p).startswith(str(name)) or name is None]
+        n_choices = len(choices)
+        if n_choices == 1: # return the only choice
+            return choices[0]
+        elif ask:
+            # Get user to select choice
+            if n_choices == 0:
+                print '*', name, "not found..."
+            return numeric_select(choices or  _projects.keys(), 
                               "Select path", "Select path")
         
 
