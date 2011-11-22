@@ -1,78 +1,6 @@
-
 import os, sys
 
 from pin import *
-
-class CompletionGenerator(object):
-
-    def __init__(self):
-        load_plugins()
-        from pin import command, registry
-        self.command = command
-        self.registry = registry
-
-
-        self.nargs = int(sys.argv[1]) - 1
-        self.args = sys.argv[2:]
-
-        self.completion = None
-
-        self.comp_plain_command()
-        if self.completion is None:
-            self.comp_help_command()
-        if self.completion is None:
-            self.comp_all()
-
-    def comp_plain_command(self):
-        if self.nargs > 0:
-            com_choices = self.check_command(self.args[0])
-            if com_choices:
-                if self.nargs == 1:
-                    self.completion = " ".join(com_choices)
-                elif self.nargs == 2 and len(com_choices) == 1:
-                    com_name = com_choices[0]
-                    subcom_choices = self.check_subcommand(com_name, 
-                                                           self.args[1])
-                    self.completion = " ".join(subcom_choices)
-
-    def comp_help_command(self):
-        if self.nargs > 0:
-            if "help".startswith(self.args[0]):
-                if self.nargs == 1:
-                    self.completion = "help"
-                else:
-                    self.nargs -= 1
-                    self.args = self.args[1:]
-                    self.comp_plain_command()
-
-    def comp_all(self):
-        if self.nargs == 0:
-            choices = []
-            for com_name, com_cls in self.command.all().items():
-                if com_cls([]).is_relevant():
-                    choices.append(com_name)
-            self.completion = " ".join(choices)
-
-
-    def check_command(self, cmd):
-        choices = []
-        for cmd_name, cmd_cls in self.command.all().items():
-            if cmd_name.startswith(cmd) and \
-               cmd_cls([]).is_relevant():
-                choices.append(cmd_name)
-        return choices
-
-    def check_subcommand(self, cmd, subcmd):
-        choices = []
-        cmd_cls = self.command.get(cmd)
-        if hasattr(com_cls, 'get_subcommands'):
-            subcmd_choices = cmd_cls.get_subcommands()
-            if subcmd_choices:
-                for sub in subcmd_choices:
-                    name = sub.split('-')[-1]
-                    if name.startswith(subcmd):
-                        choices.append(subcmd)
-        return choices
         
 
 def compgen():
@@ -180,10 +108,6 @@ def compgen():
                 return " ".join([c for c in choices if c.startswith(subcom)]) 
     # return nothing
     return ""
-
-# def compgen():
-#     gen = CompletionGenerator()
-#     return gen.completion
 
 def walkup(path):
     '''
