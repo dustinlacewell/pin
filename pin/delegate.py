@@ -33,7 +33,7 @@ class PinDelegator(CommandDelegator):
     def do_delegation(self, cmd, args):
         load_plugins()
         # project precondition
-        proj_path = registry.pathfor(cmd, exact=False)
+        proj_path = registry.pathfor(cmd)
         if proj_path is not None:
             os.chdir(proj_path)
             cmd = args[0]

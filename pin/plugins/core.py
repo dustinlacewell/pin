@@ -1,4 +1,4 @@
-import os, shutil
+import os, shutil, pdb
 from argparse import ArgumentParser
 
 from pin import *
@@ -14,6 +14,9 @@ class PinInitCommand(command.PinCommand):
     def is_relevant(self):
         return not self.root
 
+    def setup_parser(self, parser):
+        parser.add_argument('--alias', nargs=1, default=None, metavar='alias')
+
     def raise_exists(self):
         msg = "Cannot initialize pin in an existing project: %s" % self.cwd
         print msg
@@ -23,14 +26,17 @@ class PinInitCommand(command.PinCommand):
             self.raise_exists()
         else:
             print "Creating .pin directory structure..."
-            registry.initialize_project(self.cwd)
+            alias = None
+            if self.options.alias:
+                alias = self.options.alias[0]
+            registry.initialize_project(self.cwd, alias=alias)
             return True
 
     def done(self):
         print "pin project initialized in: %s" % self.cwd
-
-
 command.register(PinInitCommand)
+
+
 
 class PinDestroyCommand(command.PinCommand):
     '''Destroy and unregister the project from pin.'''
@@ -84,8 +90,7 @@ class PinGoCommand(command.PinCommand):
         parser.add_argument('project', nargs="?")
 
     def execute(self):
-        self.path = registry.pathfor(self.options.project, 
-                                     exact=False, ask=True)
+        self.path = registry.pathfor(self.options.project, ask=True)
         return self.path
 
     def write_script(self, file):
@@ -94,10 +99,67 @@ class PinGoCommand(command.PinCommand):
         
     @classmethod
     def get_subcommands(cls):
-        return dict((os.path.basename(p), PinProjectProxy(p)) 
-                    for p in registry._projects)
+        subs = dict()
+        for p, meta in registry._projects.items():
+            alias = meta.get('alias')
+            if alias:
+                subs[alias] = PinProjectProxy(p)
+            else:
+                subs[os.path.basename(p)] = PinProjectProxy(p)
+        return subs
 
 command.register(PinGoCommand)
+
+class PinAliasCommand(command.PinCommand):
+    '''Manage project aliases'''
+
+    command = 'alias'
+
+    def setup_parser(self, parser):
+        parser.add_argument('name', nargs="?")
+        parser.add_argument('-p', '--proj', nargs="?", dest='project')
+
+
+    def execute(self):
+#        pdb.set_trace()
+        name = self.options.name
+        project = getattr(self.options, 'project', None)
+        if project:
+            proj_path = registry.pathfor(project)
+            if not proj_path:
+                print "* Project", project, "not found."
+                return
+        elif self.root:
+            proj_path = self.root
+        else:
+            print "Must provide -p/--project option, if outside of pin project."
+            return
+        if name in registry._aliases:
+            if proj_path != registry._aliases[name]:
+                print "Alias `{alias}' already exists for other project:".format(alias=name)
+                print registry._aliases[name]
+                return
+            else:
+                print "Alias `{alias}' already set.".format(alias=name)
+                return
+        else:
+            current_alias = registry._projects[proj_path].get('alias')
+            if current_alias:
+                prompt =  "Alias `{alias}' already set, overwrite?".format(alias=current_alias)
+                answer = option_select(['y','n'], prompt)
+                if answer == 'n':
+                    print "Aborted."
+                    return
+                
+            _projects[proj_path]['alias'] = name
+            _aliases[name] = proj_path
+            registry.save_registry()
+            print "Alias `{alias}' has been set for, {path}".format(alias=name,
+                                                                    path=proj_path)
+            return True
+                    
+command.register(PinAliasCommand)
+    
 
 class PinHelpCommand(command.PinCommand):
     '''This help information.'''

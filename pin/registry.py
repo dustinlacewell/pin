@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, pdb
 
 from yaml import load, dump
 try:
@@ -49,28 +49,28 @@ def create_registry():
     filename = get_registry_filename()
     if not os.path.isfile(filename):
         with open(filename, 'w') as file:
-            file.write(dump({'projects': {}, 'aliases': {}}))
+            file.write(dump(dict(projects={})))
 
 def load_registry():
     '''
     Load the registry from disk.
     '''
     global _projects, _aliases
-    default = {'projects':{}, 'aliases':{}}
+    default = dict(projects={})
     with open(get_registry_filename(), 'r') as file:
         _registry = load(file, Loader=Loader) or default
         _projects = _registry['projects']
-        _aliases = _registry['aliases']
+        for p, meta in _projects.iteritems():
+            alias = meta.get('alias')
+            if alias:
+                _aliases[alias] = p
 
 def save_registry():
     '''
     Save the registry to disk.
     '''
     with open(get_registry_filename(), 'w') as file:
-        j = dump({'projects': _projects})
-        file.write(dump({
-                    'projects': _projects,
-                    'aliases': _aliases}))
+        file.write(dump(dict(projects=_projects)))
 
 def syncregistry(fin):
     def fout(*args, **kwargs):
@@ -81,13 +81,21 @@ def syncregistry(fin):
     return fout
 
 @syncregistry
-def is_registered(path):
+def name_is_registered(name):
     '''
-    Returns whether a project path or alias
-    are registered with pin.
+    Returns whether a project name or alias
+    is registered with pin.
     '''
-    path = _aliases.get(path, path)
-    return path in [os.path.basename(p) for p in _projects]
+    return (name in _aliases
+        or name in [os.path.basename(p) for p in _projects])
+
+@syncregistry
+def path_is_registered(path):
+    '''
+    Returns whether a project path
+    is registered with pin.
+    '''
+    return path in _projects
 
 @syncregistry
 def register(path, alias=None):
@@ -106,46 +114,44 @@ def register(path, alias=None):
                     print "*** Alias ignored."
                     alias = None
                     
-    _projects[path] = {}
     if alias:
+        _projects[path] = dict(alias=alias)
         _aliases[alias] = path
+    else:
+        _projects[path] = dict()
 
 @syncregistry
 def unregister(path):
     '''
     Unregister a project path with pin.
     '''
-    del _projects[path]
-    removedaliases = []
-    for alias, apath in _aliases:
-        if apath == path:
-            removedaliases.append(alias)
-    for alias in removedaliases:
-        del _aliases[alias]
+    if path in _projects:
+        alias = _projects[path].get('alias')
+        del _projects[path]
+        if alias:
+            del _aliases[alias]
 
 @syncregistry
-def pathfor(name, exact=True, ask=False):
+def pathfor(name, ask=False):
     '''
     Returns the full path of a project by 
     name or alias. If the name is not found
     None is returned.
     '''
     # Check aliases first
-    path = _aliases.get(name, None)
-    if path and is_registered(path):
-        return path
+    choices  = [os.path.basename(p) for a, p in _aliases.items() if name and a.startswith(name)]
     # Enuemerate all projects in a folder `name`
-    if not exact or ask:
-        choices = [p for p in _projects \
-                   if os.path.basename(p).startswith(str(name)) or name is None]
-        n_choices = len(choices)
-        if n_choices == 1: # return the only choice
-            return choices[0]
-        elif ask:
-            # Get user to select choice
-            if n_choices == 0:
-                print '*', name, "not found..."
-            return numeric_select(choices or  _projects.keys(), 
+    for p in _projects:
+        if p not in choices:
+            basename = os.path.basename(p)
+            if os.path.basename(p).startswith(str(name)) or name is None:
+                choices.append(p)
+    n_choices = len(choices)
+    if n_choices == 1: # return the only choice
+        return choices[0]
+    elif ask:
+        # Get user to select choice
+        return numeric_select(choices or  _projects.keys(), 
                               "Select path", "Select path")
         
 

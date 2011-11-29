@@ -49,7 +49,7 @@ def compgen():
     # # # # # # # #
     # Project Name
     if args:
-        proj_path = registry.pathfor(args[0], exact=False)
+        proj_path = registry.pathfor(args[0])
         # only increase the offset if we're not completing 
         # the first argument.
         if nargs > 1 and proj_path is not None:
