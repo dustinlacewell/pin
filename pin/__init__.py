@@ -1,5 +1,6 @@
 VERSION = '0.1dev'
 PROJECT_FOLDER = '.pin'
+SETTINGS_ROOT = '~'
 SETTINGS_FOLDER = '.pinconf'
 SETTINGS_FILE = 'settings.yml'
 REGISTRY_FILE = 'registry.yml'

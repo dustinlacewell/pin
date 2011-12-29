@@ -2,5 +2,9 @@
 
 if "__main__" == __name__:
    from pin.delegate import PinDelegator
+   from pin.registry import establish_settings_folder, create_registry, load_registry
+   establish_settings_folder()
+   create_registry()
+   load_registry()
    delegate = PinDelegator()
    

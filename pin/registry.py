@@ -20,7 +20,7 @@ def establish_settings_folder():
     if not os.path.isdir(path):
         os.mkdir(path)
         with open(os.path.join(path, SETTINGS_FILE), 'w'): pass
-        with open(os.path.join(path, REGISTRY_FILE), 'w'): pass
+        create_registry()
 
 def create_project_directory(path):
     project_path = os.path.join(path, PROJECT_FOLDER)
@@ -31,8 +31,6 @@ def initialize_project(path, alias=None):
     if not get_project_root(path):
         create_project_directory(path)
         register(path, alias)
-
-establish_settings_folder()
 
 #
 # # Registry 
@@ -64,6 +62,12 @@ def load_registry():
             alias = meta.get('alias')
             if alias:
                 _aliases[alias] = p
+
+def get_registry():
+    return _projects
+
+def get_aliases():
+    return _aliases
 
 def save_registry():
     '''
@@ -149,11 +153,10 @@ def pathfor(name, ask=False):
     n_choices = len(choices)
     if n_choices == 1: # return the only choice
         return choices[0]
-    elif ask:
+    elif ask and n_choices > 0:
         # Get user to select choice
         return numeric_select(choices or  _projects.keys(), 
                               "Select path", "Select path")
+    else:
+        print "There are no registered pin projects."
         
-
-create_registry() # initialize file if non-existant
-load_registry() # load data into module

@@ -30,6 +30,7 @@ class PinInitCommand(command.PinCommand):
             if self.options.alias:
                 alias = self.options.alias[0]
             registry.initialize_project(self.cwd, alias=alias)
+            self.root = self.cwd
             return True
 
     def done(self):

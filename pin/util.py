@@ -126,7 +126,7 @@ def name_from_path(path):
     return os.path.basename(path)
 
 def get_settings_path():
-    return os.path.expanduser(os.path.join("~", SETTINGS_FOLDER))
+    return os.path.expanduser(os.path.join(SETTINGS_ROOT, SETTINGS_FOLDER))
 
 def path_has_project(path):
     '''
