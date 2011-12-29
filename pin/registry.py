@@ -157,6 +157,4 @@ def pathfor(name, ask=False):
         # Get user to select choice
         return numeric_select(choices or  _projects.keys(), 
                               "Select path", "Select path")
-    else:
-        print "There are no registered pin projects."
         

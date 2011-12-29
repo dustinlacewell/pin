@@ -1,6 +1,9 @@
 
 _events = {}
 
+def get_events():
+    return _events
+
 def register(name, callback):
     eventset = _events.get(name, set([]))
     eventset.add(callback)

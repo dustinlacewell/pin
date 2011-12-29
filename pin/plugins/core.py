@@ -92,7 +92,11 @@ class PinGoCommand(command.PinCommand):
 
     def execute(self):
         self.path = registry.pathfor(self.options.project, ask=True)
-        return self.path
+        if self.path:
+            return self.path
+        else:
+            print "There are no registered pin projects."
+
 
     def write_script(self, file):
         if self.path:
