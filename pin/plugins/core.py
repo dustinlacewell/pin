@@ -12,7 +12,7 @@ class PinInitCommand(command.PinCommand):
     command = 'init'
 
     def is_relevant(self):
-        return not self.root
+        return self.cwd != self.root
 
     def setup_parser(self, parser):
         parser.add_argument('--alias', nargs=1, default=None, metavar='alias')
@@ -22,7 +22,7 @@ class PinInitCommand(command.PinCommand):
         print msg
 
     def execute(self):
-        if self.root:
+        if self.cwd == self.root:
             self.raise_exists()
         else:
             print "Creating .pin directory structure..."

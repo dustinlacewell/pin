@@ -28,9 +28,8 @@ def create_project_directory(path):
     with open(os.path.join(project_path, SETTINGS_FILE), 'w'): pass
 
 def initialize_project(path, alias=None):
-    if not get_project_root(path):
-        create_project_directory(path)
-        register(path, alias)
+    create_project_directory(path)
+    register(path, alias)
 
 #
 # # Registry 
