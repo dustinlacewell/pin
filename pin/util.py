@@ -165,6 +165,7 @@ def findroot(fin):
 def numeric_select(choices, prompt="Select from the above", title="Multiple choices possible:"):
     numeric_warning = False
     range_warning = False
+    choices.sort()
     while True:
         print title
         for x in range(len(choices)):

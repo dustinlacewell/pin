@@ -51,7 +51,7 @@ class PinDelegator(CommandDelegator):
                     helpcls = command.get('help')
                     helpobj = helpcls((cmd,))
                     helpobj._execute()
-                    print "\n'%s %s' command not relevant here." % (cmd, args)
+                    print "\n'%s %s' command not relevant here." % (cmd, ' '.join(args).strip())
             else:
                 self.do_default()
         except KeyboardInterrupt:
