@@ -142,7 +142,7 @@ def pathfor(name, ask=False):
     None is returned.
     '''
     # Check aliases first
-    choices  = [os.path.basename(p) for a, p in _aliases.items() if name and a.startswith(name)]
+    choices  = [p for a, p in _aliases.items() if name and a.startswith(name)]
     # Enuemerate all projects in a folder `name`
     for p in _projects:
         if p not in choices:

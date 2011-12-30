@@ -11,6 +11,5 @@ __sourceit () {
     if [ -f "$SOURCEFILE" ]
     then
         eval `cat $SOURCEFILE`
-        rm $SOURCEFILE
     fi
 }
